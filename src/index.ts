@@ -1,8 +1,9 @@
 import './index.scss';
 import { RenderLoop } from './src/core/renderLoop.ts';
 import { GameObject } from './src/interfaces/GameObject.ts';
-import { Rocket } from './src/objects/Rocket.ts';
+import { Rocket } from './src/objects/rocket.ts';
 import { RenderContext } from './src/core/renderContext.ts';
+import { Camera } from './src/objects/camera.ts';
 
 export class Simulation {
   private renderLoop: RenderLoop;
@@ -12,6 +13,8 @@ export class Simulation {
   private gameObjects: GameObject[] = [];
 
   private rocket: Rocket;
+
+  private camera: Camera;
 
   constructor() {
     this.renderLoop = new RenderLoop({
@@ -29,22 +32,19 @@ export class Simulation {
       speed: 100,
       context: this.renderContext,
     });
+    this.camera = new Camera({
+      target: this.rocket,
+      renderContext: this.renderContext,
+      x: 20,
+      y: -20,
+    });
     this.gameObjects.push(this.rocket);
     this.renderLoop.start();
   }
 
   update() {
-    if (
-      this.rocket.x >=
-      this.renderContext.getWidth() - this.renderContext.getWidth() / 3
-    ) {
-      this.renderContext.setOffsetX(
-        this.rocket.x -
-          this.renderContext.getWidth() +
-          this.renderContext.getWidth() / 3
-      );
-    }
     this.gameObjects.forEach((obj) => obj.update());
+    this.camera.update();
   }
 
   render() {

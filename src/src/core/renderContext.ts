@@ -9,6 +9,8 @@ export class RenderContext {
 
   private offsetX: number = 0;
 
+  private offsetY: number = 0;
+
   constructor(selector: string) {
     this.element = document.querySelector(selector) as HTMLCanvasElement;
     this.context = this.element.getContext('2d') as CanvasRenderingContext2D;
@@ -21,11 +23,11 @@ export class RenderContext {
   }
 
   getY(originalY: number): number {
-    return this.canvasHeight - originalY;
+    return this.canvasHeight - originalY + this.offsetY;
   }
 
   getX(originalX: number): number {
-    return originalX - this.offsetX;
+    return originalX + this.offsetX;
   }
 
   clear() {
@@ -38,5 +40,9 @@ export class RenderContext {
 
   setOffsetX(offset: number) {
     this.offsetX = offset;
+  }
+
+  setOffsetY(offset: number) {
+    this.offsetY = offset;
   }
 }
