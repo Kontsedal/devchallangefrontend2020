@@ -1,2 +1,1 @@
-// eslint-disable-next-line no-alert
-alert(1);
+import './index.scss';

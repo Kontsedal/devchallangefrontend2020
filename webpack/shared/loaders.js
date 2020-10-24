@@ -12,7 +12,6 @@ const processSassFiles = {
       loader: 'css-loader',
       options: {
         sourceMap: true,
-        modules: true,
       },
     },
     'sass-loader',
