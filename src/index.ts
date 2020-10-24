@@ -2,7 +2,7 @@ import './index.scss';
 import { RenderLoop } from './src/core/renderLoop.ts';
 import { GameObject } from './src/interfaces/GameObject.ts';
 import { Rocket } from './src/objects/Rocket.ts';
-import { RenderContext } from './src/core/renderContext';
+import { RenderContext } from './src/core/renderContext.ts';
 
 export class Simulation {
   private renderLoop: RenderLoop;
@@ -10,6 +10,8 @@ export class Simulation {
   private renderContext: RenderContext;
 
   private gameObjects: GameObject[] = [];
+
+  private rocket: Rocket;
 
   constructor() {
     this.renderLoop = new RenderLoop({
@@ -20,19 +22,28 @@ export class Simulation {
 
   start() {
     this.renderContext = new RenderContext('.js-canvas');
-    this.gameObjects.push(
-      new Rocket({
-        x: 0,
-        y: 0,
-        angle: 45,
-        speed: 1,
-        context: this.renderContext,
-      })
-    );
+    this.rocket = new Rocket({
+      x: 0,
+      y: 300,
+      angle: 45,
+      speed: 100,
+      context: this.renderContext,
+    });
+    this.gameObjects.push(this.rocket);
     this.renderLoop.start();
   }
 
   update() {
+    if (
+      this.rocket.x >=
+      this.renderContext.getWidth() - this.renderContext.getWidth() / 3
+    ) {
+      this.renderContext.setOffsetX(
+        this.rocket.x -
+          this.renderContext.getWidth() +
+          this.renderContext.getWidth() / 3
+      );
+    }
     this.gameObjects.forEach((obj) => obj.update());
   }
 
