@@ -7,7 +7,7 @@ type Options = {
   x: number;
   y: number;
 };
-export class Camera {
+export class Camera implements GameObject {
   private readonly target: GameObject;
 
   private readonly renderContext: RenderContext;
@@ -44,4 +44,6 @@ export class Camera {
     this.renderContext.setOffsetX(this.x);
     this.renderContext.setOffsetY(this.y);
   }
+
+  render(): void {}
 }

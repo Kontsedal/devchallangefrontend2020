@@ -4,6 +4,7 @@ import { GameObject } from './src/interfaces/GameObject.ts';
 import { Rocket } from './src/objects/rocket.ts';
 import { RenderContext } from './src/core/renderContext.ts';
 import { Camera } from './src/objects/camera.ts';
+import { Ground } from './src/objects/ground.ts';
 
 export class Simulation {
   private renderLoop: RenderLoop;
@@ -36,15 +37,16 @@ export class Simulation {
       target: this.rocket,
       renderContext: this.renderContext,
       x: 20,
-      y: -20,
+      y: -35,
     });
     this.gameObjects.push(this.rocket);
+    this.gameObjects.push(new Ground(this.renderContext));
+    this.gameObjects.push(this.camera);
     this.renderLoop.start();
   }
 
   update() {
     this.gameObjects.forEach((obj) => obj.update());
-    this.camera.update();
   }
 
   render() {

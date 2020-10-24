@@ -58,8 +58,8 @@ export class Rocket implements GameObject {
     const canvasContext = this.context.getContext();
     canvasContext.beginPath();
     canvasContext.arc(
-      this.context.getX(this.x),
-      this.context.getY(this.y),
+      this.context.getCurrentX(this.x),
+      this.context.getCurrentY(this.y),
       10,
       0,
       2 * Math.PI

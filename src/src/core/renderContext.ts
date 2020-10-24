@@ -7,7 +7,7 @@ export class RenderContext {
 
   private readonly canvasHeight: number;
 
-  private offsetX: number = 0;
+  public offsetX: number = 0;
 
   private offsetY: number = 0;
 
@@ -22,11 +22,11 @@ export class RenderContext {
     return this.context;
   }
 
-  getY(originalY: number): number {
+  getCurrentY(originalY: number): number {
     return this.canvasHeight - originalY + this.offsetY;
   }
 
-  getX(originalX: number): number {
+  getCurrentX(originalX: number): number {
     return originalX + this.offsetX;
   }
 

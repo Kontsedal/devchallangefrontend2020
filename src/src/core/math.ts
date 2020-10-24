@@ -1,11 +1,12 @@
-function memo<T extends Function>(cb: T): ReturnType<T> {
-  const cache: Record<string, ReturnType<T>> = {};
-  return (...args: Parameters<T>[]) => {
-    const cacheKey = JSON.stringify(args);
+// eslint-disable-next-line no-unused-vars
+function memo(cb: (...args: number[]) => number): (arg: number) => number {
+  const cache: Record<string, number> = {};
+  return (arg: number): number => {
+    const cacheKey = arg;
     if (cache[cacheKey]) {
       return cache[cacheKey];
     }
-    const result = cb(...args);
+    const result = cb(arg);
     cache[cacheKey] = result;
     return result;
   };
