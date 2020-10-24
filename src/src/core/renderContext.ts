@@ -38,6 +38,10 @@ export class RenderContext {
     return this.canvasWidth;
   }
 
+  getHeight() {
+    return this.canvasHeight;
+  }
+
   setOffsetX(offset: number) {
     this.offsetX = offset;
   }

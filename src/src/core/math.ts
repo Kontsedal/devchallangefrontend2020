@@ -12,8 +12,11 @@ function memo(cb: (...args: number[]) => number): (arg: number) => number {
   };
 }
 
-function degreesToRadians(deg: number): number {
+export function degreesToRadians(deg: number): number {
   return deg * (Math.PI / 180);
+}
+export function radiansToDegrees(radians: number): number {
+  return (radians * 180) / Math.PI;
 }
 
 export const cos = memo((degrees: number): number => {

@@ -7,7 +7,7 @@ export class Ground implements GameObject {
 
   y: number = 0;
 
-  private img: HTMLImageElement;
+  private readonly img: HTMLImageElement;
 
   private renderContext: RenderContext;
 
@@ -19,6 +19,7 @@ export class Ground implements GameObject {
 
   render() {
     const context = this.renderContext.getContext();
+    context.save();
     context.translate(
       this.renderContext.getCurrentX(0),
       this.renderContext.getCurrentY(0)
@@ -33,10 +34,7 @@ export class Ground implements GameObject {
       this.renderContext.getWidth() - this.renderContext.offsetX + 100,
       100
     );
-    context.translate(
-      -this.renderContext.getCurrentX(0),
-      -this.renderContext.getCurrentY(0)
-    );
+    context.restore();
   }
 
   update() {}
