@@ -16,6 +16,10 @@ export class Wall implements GameObject {
 
   public height: number;
 
+  public collidable = true;
+
+  public collides = false;
+
   constructor({ renderContext, height = 200, width = 50, x }: Options) {
     this.renderContext = renderContext;
     this.x = x;
@@ -29,12 +33,6 @@ export class Wall implements GameObject {
   render(): void {
     const context = this.renderContext.getContext();
     context.fillRect(
-      this.renderContext.getCurrentX(this.x),
-      this.renderContext.getCurrentY(this.y),
-      this.width,
-      this.height
-    );
-    console.log(
       this.renderContext.getCurrentX(this.x),
       this.renderContext.getCurrentY(this.y),
       this.width,

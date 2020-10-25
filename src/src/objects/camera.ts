@@ -20,6 +20,14 @@ export class Camera implements GameObject {
 
   private y: number;
 
+  public width = 0;
+
+  public height = 0;
+
+  public collidable = false;
+
+  public collides = false;
+
   constructor({ target, renderContext, x, y }: Options) {
     this.target = target;
     this.renderContext = renderContext;

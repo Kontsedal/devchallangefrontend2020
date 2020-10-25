@@ -3,13 +3,21 @@ import groundImageSrc from '../assets/ground.png';
 import { RenderContext } from '../core/renderContext.ts';
 
 export class Ground implements GameObject {
-  x: number = 0;
+  x: number = -100;
 
   y: number = 0;
 
   private readonly img: HTMLImageElement;
 
   private renderContext: RenderContext;
+
+  public collidable = true;
+
+  public height = 100;
+
+  public width = 0;
+
+  public collides = false;
 
   constructor(context: RenderContext) {
     this.renderContext = context;
@@ -28,14 +36,12 @@ export class Ground implements GameObject {
       this.img,
       'repeat'
     ) as CanvasPattern;
-    context.fillRect(
-      -100,
-      0,
-      this.renderContext.getWidth() - this.renderContext.offsetX + 100,
-      100
-    );
+    context.fillRect(this.x, this.y, this.width, this.height);
     context.restore();
   }
 
-  update() {}
+  update() {
+    this.width =
+      this.renderContext.getWidth() - this.renderContext.offsetX + 100;
+  }
 }

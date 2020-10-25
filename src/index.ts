@@ -6,6 +6,7 @@ import { RenderContext } from './src/core/renderContext.ts';
 import { Camera } from './src/objects/camera.ts';
 import { Ground } from './src/objects/ground.ts';
 import { Wall } from './src/objects/wall.ts';
+import { getCollisions } from './src/core/collisionType.ts';
 
 export class Simulation {
   private renderLoop: RenderLoop;
@@ -29,9 +30,9 @@ export class Simulation {
     this.renderContext = new RenderContext('.js-canvas');
     this.rocket = new Rocket({
       x: 0,
-      y: 50,
-      angle: 75,
-      speed: 100,
+      y: 300,
+      angle: 30,
+      speed: 150,
       context: this.renderContext,
     });
     this.camera = new Camera({
@@ -40,24 +41,11 @@ export class Simulation {
       x: 20,
       y: -35,
     });
-    this.gameObjects.push(
-      new Wall({ renderContext: this.renderContext, x: 300 })
-    );
-    this.gameObjects.push(
-      new Wall({ renderContext: this.renderContext, x: 600 })
-    );
-    this.gameObjects.push(
-      new Wall({ renderContext: this.renderContext, x: 900 })
-    );
-    this.gameObjects.push(
-      new Wall({ renderContext: this.renderContext, x: 1200 })
-    );
-    this.gameObjects.push(
-      new Wall({ renderContext: this.renderContext, x: 1600 })
-    );
-    this.gameObjects.push(
-      new Wall({ renderContext: this.renderContext, x: 2300 })
-    );
+    new Array(40).fill(0).forEach((_, index) => {
+      this.gameObjects.push(
+        new Wall({ renderContext: this.renderContext, x: 300 + 400 * index })
+      );
+    });
     this.gameObjects.push(new Ground(this.renderContext));
 
     this.gameObjects.push(this.rocket);
@@ -66,7 +54,10 @@ export class Simulation {
   }
 
   update() {
-    this.gameObjects.forEach((obj) => obj.update());
+    this.gameObjects.forEach((obj) => {
+      const collisions = getCollisions(this.gameObjects, obj);
+      obj.update(collisions);
+    });
   }
 
   render() {
