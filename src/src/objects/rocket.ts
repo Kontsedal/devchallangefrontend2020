@@ -78,10 +78,10 @@ export class Rocket implements GameObject {
       0.5 * G * this.tickNumber ** 2;
     const timeToGround = (2 * this.speed * sin(this.initialAngle)) / (G * 3);
     if (this.speed <= 30) {
-      this.displayAngle = Math.floor((this.displayAngle * 50 + 90) / 51);
+      this.displayAngle = Math.floor((this.displayAngle * 50 + 45) / 51);
     } else {
       this.displayAngle =
-        this.initialAngle +
+        this.initialAngle -
         ((this.tickNumber / timeToGround) * this.initialAngle) / 2;
     }
 
@@ -95,8 +95,6 @@ export class Rocket implements GameObject {
         this.speed = 0;
       }
     }
-
-    console.log({ y: this.y, speed: this.speed, angle: this.displayAngle });
 
     // this.displayAngle += vectorsAngle(
     //   { x: previousX, y: previousY },
@@ -113,7 +111,7 @@ export class Rocket implements GameObject {
       this.context.getCurrentX(this.x),
       this.context.getCurrentY(this.y)
     );
-    canvasContext.rotate(degreesToRadians(this.displayAngle));
+    canvasContext.rotate(degreesToRadians(Math.abs(this.displayAngle - 90)));
     canvasContext.drawImage(this.img, 0, 0, 50, 80);
     canvasContext.restore();
   }

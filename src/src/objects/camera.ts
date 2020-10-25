@@ -41,6 +41,13 @@ export class Camera implements GameObject {
         this.renderContext.getWidth() / 3
       );
     }
+
+    const maxY = this.renderContext.getHeight() - 50;
+    if (this.target.y >= maxY) {
+      this.y = this.initialY + this.target.y - maxY;
+    } else {
+      this.y = this.initialY;
+    }
     this.renderContext.setOffsetX(this.x);
     this.renderContext.setOffsetY(this.y);
   }

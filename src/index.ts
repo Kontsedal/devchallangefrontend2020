@@ -5,6 +5,7 @@ import { Rocket } from './src/objects/rocket.ts';
 import { RenderContext } from './src/core/renderContext.ts';
 import { Camera } from './src/objects/camera.ts';
 import { Ground } from './src/objects/ground.ts';
+import { Wall } from './src/objects/wall.ts';
 
 export class Simulation {
   private renderLoop: RenderLoop;
@@ -29,8 +30,8 @@ export class Simulation {
     this.rocket = new Rocket({
       x: 0,
       y: 50,
-      angle: 45,
-      speed: 200,
+      angle: 75,
+      speed: 100,
       context: this.renderContext,
     });
     this.camera = new Camera({
@@ -39,7 +40,26 @@ export class Simulation {
       x: 20,
       y: -35,
     });
+    this.gameObjects.push(
+      new Wall({ renderContext: this.renderContext, x: 300 })
+    );
+    this.gameObjects.push(
+      new Wall({ renderContext: this.renderContext, x: 600 })
+    );
+    this.gameObjects.push(
+      new Wall({ renderContext: this.renderContext, x: 900 })
+    );
+    this.gameObjects.push(
+      new Wall({ renderContext: this.renderContext, x: 1200 })
+    );
+    this.gameObjects.push(
+      new Wall({ renderContext: this.renderContext, x: 1600 })
+    );
+    this.gameObjects.push(
+      new Wall({ renderContext: this.renderContext, x: 2300 })
+    );
     this.gameObjects.push(new Ground(this.renderContext));
+
     this.gameObjects.push(this.rocket);
     this.gameObjects.push(this.camera);
     this.renderLoop.start();
