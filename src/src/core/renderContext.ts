@@ -3,9 +3,9 @@ export class RenderContext {
 
   private readonly context: CanvasRenderingContext2D;
 
-  private readonly canvasWidth: number;
+  private canvasWidth: number;
 
-  private readonly canvasHeight: number;
+  private canvasHeight: number;
 
   public offsetX: number = 0;
 
@@ -14,8 +14,17 @@ export class RenderContext {
   constructor(selector: string) {
     this.element = document.querySelector(selector) as HTMLCanvasElement;
     this.context = this.element.getContext('2d') as CanvasRenderingContext2D;
+    this.element.width = window.innerWidth;
+    this.element.height = window.innerHeight;
     this.canvasWidth = this.element.clientWidth;
     this.canvasHeight = this.element.clientHeight;
+
+    window.addEventListener('resize', () => {
+      this.element.width = window.innerWidth;
+      this.element.height = window.innerHeight;
+      this.canvasWidth = this.element.clientWidth;
+      this.canvasHeight = this.element.clientHeight;
+    });
   }
 
   getContext() {

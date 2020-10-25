@@ -31,7 +31,7 @@ export class Simulation {
     this.rocket = new Rocket({
       x: 50,
       y: 100,
-      angle: 45,
+      angle: 15,
       speed: 150,
       context: this.renderContext,
     });

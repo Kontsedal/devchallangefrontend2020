@@ -2,12 +2,15 @@ html, body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .root {
   color: black;
+  overflow: hidden;
 }
 
 .canvas {
-  border: 3px solid #ddd
+  //border: 3px solid #ddd
 }
