@@ -29,7 +29,7 @@ export class Simulation {
     this.rocket = new Rocket({
       x: 0,
       y: 300,
-      angle: 45,
+      angle: 30,
       speed: 100,
       context: this.renderContext,
     });
@@ -39,8 +39,8 @@ export class Simulation {
       x: 20,
       y: -35,
     });
-    this.gameObjects.push(this.rocket);
     this.gameObjects.push(new Ground(this.renderContext));
+    this.gameObjects.push(this.rocket);
     this.gameObjects.push(this.camera);
     this.renderLoop.start();
   }

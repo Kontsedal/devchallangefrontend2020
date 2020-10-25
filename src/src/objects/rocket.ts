@@ -47,6 +47,10 @@ export class Rocket implements GameObject {
 
   private tickNumber = 0;
 
+  private width = 80;
+
+  private height = 40;
+
   private readonly img: HTMLImageElement;
 
   constructor(options: Options) {
@@ -55,7 +59,7 @@ export class Rocket implements GameObject {
     this.y = options.y;
     this.initialY = options.y;
     this.initialAngle = options.angle;
-    this.displayAngle = options.angle;
+    this.displayAngle = this.initialAngle;
     this.speed = options.speed;
     this.context = options.context;
     this.img = new Image();
@@ -63,24 +67,32 @@ export class Rocket implements GameObject {
   }
 
   update() {
-    const previousX = this.x;
-    const previousY = this.y;
     this.x =
       this.initialX + this.speed * this.tickNumber * cos(this.initialAngle);
     this.y =
+      this.initialY +
       this.speed * this.tickNumber * sin(this.initialAngle) -
       0.5 * G * this.tickNumber ** 2;
-    if (this.y < 0) {
-      this.y = 0;
-      this.x = previousX;
-      this.initialX = previousX;
+    const timeToGround = (2 * this.speed * sin(this.initialAngle)) / (G * 3);
+    if (this.speed <= 30) {
+      this.displayAngle = (this.displayAngle * 100 + 90) / 101;
+    } else {
+      this.displayAngle =
+        this.initialAngle +
+        ((this.tickNumber / timeToGround) * this.initialAngle) / 2;
+    }
+
+    if (this.y <= this.width / 2) {
+      this.y = this.width / 2;
+      this.initialX = this.x;
+      this.initialY = this.y;
       this.speed /= 1.5;
       this.tickNumber = 0;
+      this.initialAngle *= 1.1;
     }
-    const timeToGround = (2 * this.speed * sin(this.initialAngle)) / (G * 3);
-    this.displayAngle =
-      this.initialAngle +
-      ((this.tickNumber / timeToGround) * this.initialAngle) / 2;
+
+    console.log({ y: this.y, speed: this.speed, angle: this.displayAngle });
+
     // this.displayAngle += vectorsAngle(
     //   { x: previousX, y: previousY },
     //   { x: this.x, y: this.y }
