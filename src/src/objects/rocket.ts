@@ -43,6 +43,8 @@ export class Rocket implements GameObject {
 
   private speed: number;
 
+  private initialSpeed: number;
+
   private context: RenderContext;
 
   private tickNumber = 0;
@@ -61,6 +63,7 @@ export class Rocket implements GameObject {
     this.initialAngle = options.angle;
     this.displayAngle = this.initialAngle;
     this.speed = options.speed;
+    this.initialSpeed = options.speed;
     this.context = options.context;
     this.img = new Image();
     this.img.src = rocketImageSrc;
@@ -75,7 +78,7 @@ export class Rocket implements GameObject {
       0.5 * G * this.tickNumber ** 2;
     const timeToGround = (2 * this.speed * sin(this.initialAngle)) / (G * 3);
     if (this.speed <= 30) {
-      this.displayAngle = (this.displayAngle * 100 + 90) / 101;
+      this.displayAngle = Math.floor((this.displayAngle * 50 + 90) / 51);
     } else {
       this.displayAngle =
         this.initialAngle +
@@ -88,7 +91,9 @@ export class Rocket implements GameObject {
       this.initialY = this.y;
       this.speed /= 1.5;
       this.tickNumber = 0;
-      this.initialAngle *= 1.1;
+      if (this.speed <= 5) {
+        this.speed = 0;
+      }
     }
 
     console.log({ y: this.y, speed: this.speed, angle: this.displayAngle });

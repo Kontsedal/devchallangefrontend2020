@@ -28,9 +28,9 @@ export class Simulation {
     this.renderContext = new RenderContext('.js-canvas');
     this.rocket = new Rocket({
       x: 0,
-      y: 300,
-      angle: 30,
-      speed: 100,
+      y: 50,
+      angle: 45,
+      speed: 200,
       context: this.renderContext,
     });
     this.camera = new Camera({
