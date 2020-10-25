@@ -6,7 +6,7 @@ import { RenderContext } from './src/core/renderContext.ts';
 import { Camera } from './src/objects/camera.ts';
 import { Ground } from './src/objects/ground.ts';
 import { Wall } from './src/objects/wall.ts';
-import { getCollisions } from './src/core/collisionType.ts';
+import { getCollisions } from './src/core/collision.ts';
 
 export class Simulation {
   private renderLoop: RenderLoop;
@@ -29,9 +29,9 @@ export class Simulation {
   start() {
     this.renderContext = new RenderContext('.js-canvas');
     this.rocket = new Rocket({
-      x: 0,
-      y: 300,
-      angle: 30,
+      x: 50,
+      y: 100,
+      angle: 45,
       speed: 150,
       context: this.renderContext,
     });
@@ -43,7 +43,7 @@ export class Simulation {
     });
     new Array(40).fill(0).forEach((_, index) => {
       this.gameObjects.push(
-        new Wall({ renderContext: this.renderContext, x: 300 + 400 * index })
+        new Wall({ renderContext: this.renderContext, x: 700 + 400 * index })
       );
     });
     this.gameObjects.push(new Ground(this.renderContext));

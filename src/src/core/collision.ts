@@ -1,17 +1,5 @@
 import { GameObject } from '../interfaces/GameObject.ts';
-import { Ground } from '../objects/ground.ts';
-
-export enum CollisionType {
-  RIGHT = 'RIGHT',
-  LEFT = 'LEFT',
-  BOTTOM = 'BOTTOM',
-}
-
-export type Collision = {
-  type: CollisionType;
-  diffX: number;
-  diffY: number;
-};
+import { Collision, CollisionType } from '../interfaces/Collision.ts';
 
 export function getCollisions(
   objects: GameObject[],
@@ -19,13 +7,12 @@ export function getCollisions(
 ): Collision[] {
   const collisions: Collision[] = [];
   objects.forEach((obj) => {
-    let collision: CollisionType;
+    let collisionType: CollisionType;
     if (obj === target || !target.collides || !obj.collidable) {
       return;
     }
     const ol = obj.x;
     const ot = obj.y;
-    const ob = ot - obj.height;
     const or = ol + obj.width;
 
     const tl = target.x;
@@ -37,16 +24,16 @@ export function getCollisions(
 
     if (tr > ol && tl < ol && tb < ot && Math.abs(tr - ol) <= 10) {
       diffX = tr - ol;
-      collision = CollisionType.RIGHT;
+      collisionType = CollisionType.RIGHT;
     } else if (tr > ol && tr < or && tb < ot && Math.abs(ot - tb) <= 10) {
-      collision = CollisionType.BOTTOM;
+      collisionType = CollisionType.BOTTOM;
     } else if (tl < or && tr > ol && tb < ot && Math.abs(or - tl) <= 10) {
       diffX = or - tl;
-      collision = CollisionType.LEFT;
+      collisionType = CollisionType.LEFT;
     }
 
-    if (collision) {
-      collisions.push({ type: collision, diffX, diffY });
+    if (typeof collisionType !== 'undefined') {
+      collisions.push({ type: collisionType, diffX, diffY });
     }
   });
   return collisions;

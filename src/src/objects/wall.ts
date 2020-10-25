@@ -4,13 +4,15 @@ import { GameObject } from '../interfaces/GameObject.ts';
 type Options = {
   renderContext: RenderContext;
   x: number;
+  width?: number;
+  height?: number;
 };
 export class Wall implements GameObject {
   private readonly renderContext: RenderContext;
 
-  private x: number;
+  public x: number;
 
-  private y: number;
+  public y: number;
 
   public width: number;
 
@@ -20,12 +22,12 @@ export class Wall implements GameObject {
 
   public collides = false;
 
-  constructor({ renderContext, height = 200, width = 50, x }: Options) {
+  constructor({ renderContext, height, width, x }: Options) {
     this.renderContext = renderContext;
     this.x = x;
-    this.y = height;
-    this.width = width;
-    this.height = height;
+    this.y = height ?? 200;
+    this.width = width ?? 50;
+    this.height = height ?? 200;
   }
 
   update() {}

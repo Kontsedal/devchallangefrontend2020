@@ -1,4 +1,4 @@
-import { Collision } from '../core/collisionType.ts';
+import { Collision } from './Collision';
 
 export interface GameObject {
   update: (collisions: Collision[]) => void;

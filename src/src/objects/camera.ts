@@ -12,13 +12,13 @@ export class Camera implements GameObject {
 
   private readonly renderContext: RenderContext;
 
-  private initialX: number;
+  private readonly initialX: number;
 
-  private x: number;
+  public x: number;
 
-  private initialY: number;
+  private readonly initialY: number;
 
-  private y: number;
+  public y: number;
 
   public width = 0;
 
@@ -48,9 +48,22 @@ export class Camera implements GameObject {
         this.renderContext.getWidth() +
         this.renderContext.getWidth() / 3
       );
+    } else if (this.target.x <= 100) {
+      this.x = -(this.initialX + this.target.x - 100);
+    }
+    if (
+      this.target.x >=
+      this.renderContext.getWidth() - this.renderContext.getWidth() / 3
+    ) {
+      this.x = -(
+        this.initialX +
+        this.target.x -
+        this.renderContext.getWidth() +
+        this.renderContext.getWidth() / 3
+      );
     }
 
-    const maxY = this.renderContext.getHeight() - 50;
+    const maxY = this.renderContext.getHeight() - 100;
     if (this.target.y >= maxY) {
       this.y = this.initialY + this.target.y - maxY;
     } else {

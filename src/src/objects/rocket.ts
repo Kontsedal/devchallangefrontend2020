@@ -2,7 +2,7 @@ import { GameObject } from '../interfaces/GameObject.ts';
 import { RenderContext } from '../core/renderContext.ts';
 import { cos, degreesToRadians, radiansToDegrees, sin } from '../core/math.ts';
 import rocketImageSrc from '../assets/rocket.png';
-import { Collision, CollisionType } from '../core/collisionType.ts';
+import { Collision, CollisionType } from '../interfaces/Collision.ts';
 
 type Options = {
   x: number;
@@ -12,8 +12,8 @@ type Options = {
   context: RenderContext;
 };
 const G = 9.8;
-function denormalizeAngle(angle, oposite) {
-  const result = Math.abs(angle - (oposite ? 270 : 90));
+function denormalizeAngle(angle: number, isOpposite: boolean): number {
+  const result = Math.abs(angle - (isOpposite ? 270 : 90));
   return result;
 }
 export class Rocket implements GameObject {
@@ -27,19 +27,17 @@ export class Rocket implements GameObject {
 
   private initialAngle: number;
 
-  private displayAngle: number;
+  private currentAngle: number;
 
   private speed: number;
 
-  private initialSpeed: number;
-
-  private context: RenderContext;
+  private renderContext: RenderContext;
 
   private tickNumber = 0;
 
-  private width = 40;
+  public width = 40;
 
-  private height = 40;
+  public height = 40;
 
   public readonly collidable = true;
 
@@ -55,51 +53,49 @@ export class Rocket implements GameObject {
     this.y = options.y;
     this.initialY = options.y;
     this.initialAngle = options.angle;
-    this.displayAngle = this.initialAngle;
+    this.currentAngle = this.initialAngle;
     this.speed = options.speed;
-    this.initialSpeed = options.speed;
-    this.context = options.context;
+    this.renderContext = options.context;
     this.img = new Image();
     this.img.src = rocketImageSrc;
   }
 
   update(collisions: Collision[]) {
-    const testAngle = radiansToDegrees(
+    // Calculating angle of the object force
+    this.currentAngle = radiansToDegrees(
       Math.atan(
         (this.speed * sin(this.initialAngle) - G * this.tickNumber) /
           (this.speed * cos(this.initialAngle))
       )
     );
-    this.displayAngle = testAngle;
     collisions.forEach((collision) => {
       if (collision.type === CollisionType.BOTTOM) {
         this.y += collision.diffY;
         this.initialX = this.x;
         this.initialY = this.y;
-        this.speed /= 1.4;
-        this.tickNumber = 0;
         this.initialAngle = !this.oppositeDirection
-          ? -this.displayAngle
-          : 180 - this.displayAngle;
+          ? -this.currentAngle
+          : 180 - this.currentAngle;
       }
       if (collision.type === CollisionType.RIGHT && !this.oppositeDirection) {
         this.initialX = this.x - collision.diffX;
         this.initialY = this.y;
-        this.speed /= 1.2;
-        this.initialAngle = 180 - this.displayAngle;
-        this.tickNumber = 0;
+        this.initialAngle = 180 - this.currentAngle;
         this.oppositeDirection = true;
       }
 
       if (collision.type === CollisionType.LEFT && this.oppositeDirection) {
         this.initialX = this.x + collision.diffX;
         this.initialY = this.y;
-        this.speed /= 1.2;
-        this.initialAngle = -this.displayAngle;
-        this.tickNumber = 0;
+        this.initialAngle = -this.currentAngle;
         this.oppositeDirection = false;
       }
     });
+
+    if (collisions.length) {
+      this.tickNumber = 0;
+      this.speed /= 1.3;
+    }
 
     this.x =
       this.initialX + this.speed * this.tickNumber * cos(this.initialAngle);
@@ -111,15 +107,16 @@ export class Rocket implements GameObject {
     if (this.speed <= 2) {
       this.speed = 0;
     }
+    // slow normalization of the object angle in the eng of the simulation
     if (this.speed <= 20) {
-      this.displayAngle = Math.floor(
-        (this.displayAngle * 50 + this.oppositeDirection ? -90 : 90) / 51
+      this.currentAngle = Math.floor(
+        (this.currentAngle * 50 + this.oppositeDirection ? -90 : 90) / 51
       );
     }
     // const timeToGround = (2 * this.speed * sin(this.initialAngle)) / (G * 3);
 
     // else {
-    //   this.displayAngle =
+    //   this.currentAngle =
     //     this.initialAngle +
     //     (this.xMultiplier *
     //       ((this.tickNumber / timeToGround) * this.initialAngle)) /
@@ -129,15 +126,15 @@ export class Rocket implements GameObject {
   }
 
   render() {
-    const canvasContext = this.context.getContext();
+    const canvasContext = this.renderContext.getContext();
     canvasContext.save();
     canvasContext.translate(
-      this.context.getCurrentX(this.x),
-      this.context.getCurrentY(this.y)
+      this.renderContext.getCurrentX(this.x),
+      this.renderContext.getCurrentY(this.y)
     );
     canvasContext.rotate(
       degreesToRadians(
-        denormalizeAngle(this.displayAngle, this.oppositeDirection)
+        denormalizeAngle(this.currentAngle, this.oppositeDirection)
       )
     );
     canvasContext.drawImage(
