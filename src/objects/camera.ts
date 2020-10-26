@@ -1,5 +1,6 @@
 import { RenderContext } from '../core/renderContext';
 import { GameObject } from '../interfaces/gameObject';
+import { CONFIG } from '../config';
 
 type Options = {
   target: GameObject;
@@ -40,30 +41,41 @@ export class Camera implements GameObject {
   update() {
     if (
       this.target.x >=
-      this.renderContext.getWidth() - this.renderContext.getWidth() / 3
+      this.renderContext.getWidth() -
+        this.renderContext.getWidth() *
+          CONFIG.CAMERA.MAX_TARGET_OFFSET_X_PERCENT
     ) {
       this.x = -(
         this.initialX +
         this.target.x -
         this.renderContext.getWidth() +
-        this.renderContext.getWidth() / 3
+        this.renderContext.getWidth() *
+          CONFIG.CAMERA.MAX_TARGET_OFFSET_X_PERCENT
       );
-    } else if (this.target.x <= 100) {
-      this.x = -(this.initialX + this.target.x - 100);
+    } else if (this.target.x <= CONFIG.CAMERA.MIN_TARGET_OFFSET_X) {
+      this.x = -(
+        this.initialX +
+        this.target.x -
+        CONFIG.CAMERA.MIN_TARGET_OFFSET_X
+      );
     }
     if (
       this.target.x >=
-      this.renderContext.getWidth() - this.renderContext.getWidth() / 3
+      this.renderContext.getWidth() -
+        this.renderContext.getWidth() *
+          CONFIG.CAMERA.MAX_TARGET_OFFSET_X_PERCENT
     ) {
       this.x = -(
         this.initialX +
         this.target.x -
         this.renderContext.getWidth() +
-        this.renderContext.getWidth() / 3
+        this.renderContext.getWidth() *
+          CONFIG.CAMERA.MAX_TARGET_OFFSET_X_PERCENT
       );
     }
 
-    const maxY = this.renderContext.getHeight() - 100;
+    const maxY =
+      this.renderContext.getHeight() - CONFIG.CAMERA.MAX_TARGET_OFFSET_Y;
     if (this.target.y >= maxY) {
       this.y = this.initialY + this.target.y - maxY;
     } else {

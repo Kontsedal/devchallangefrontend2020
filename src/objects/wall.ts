@@ -4,8 +4,8 @@ import { GameObject } from '../interfaces/gameObject';
 type Options = {
   renderContext: RenderContext;
   x: number;
-  width?: number;
-  height?: number;
+  width: number;
+  height: number;
 };
 export class Wall implements GameObject {
   private readonly renderContext: RenderContext;
@@ -25,9 +25,9 @@ export class Wall implements GameObject {
   constructor({ renderContext, height, width, x }: Options) {
     this.renderContext = renderContext;
     this.x = x;
-    this.y = height ?? 200;
-    this.width = width ?? 50;
-    this.height = height ?? 200;
+    this.y = height;
+    this.width = width;
+    this.height = height;
   }
 
   update() {}

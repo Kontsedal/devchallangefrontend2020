@@ -3,6 +3,7 @@ import { RenderContext } from '../core/renderContext';
 import { cos, degreesToRadians, radiansToDegrees, sin } from '../core/math';
 import rocketImageSrc from '../assets/rocket.png';
 import { Collision, CollisionType } from '../core/collision';
+import { CONFIG } from '../config';
 
 type Options = {
   x: number;
@@ -11,10 +12,8 @@ type Options = {
   speed: number;
   context: RenderContext;
 };
-const G = 9.8;
 function denormalizeAngle(angle: number, isOpposite: boolean): number {
-  const result = Math.abs(angle - (isOpposite ? 270 : 90));
-  return result;
+  return Math.abs(angle - (isOpposite ? 270 : 90));
 }
 export class Rocket implements GameObject {
   public x: number;
@@ -33,7 +32,7 @@ export class Rocket implements GameObject {
 
   private renderContext: RenderContext;
 
-  private tickNumber = 0;
+  private timeSinceStart = 0;
 
   public width = 40;
 
@@ -64,7 +63,8 @@ export class Rocket implements GameObject {
     // Calculating angle of the object force
     this.currentAngle = radiansToDegrees(
       Math.atan(
-        (this.speed * sin(this.initialAngle) - G * this.tickNumber) /
+        (this.speed * sin(this.initialAngle) -
+          CONFIG.GRAVITY_FORCE * this.timeSinceStart) /
           (this.speed * cos(this.initialAngle))
       )
     );
@@ -93,34 +93,26 @@ export class Rocket implements GameObject {
     });
 
     if (collisions.length) {
-      this.tickNumber = 0;
-      this.speed /= 1.3;
+      this.timeSinceStart = 0;
+      this.speed *= CONFIG.ROCKET.COLLISION_SPEED_MULTIPLIER;
     }
 
     this.x =
-      this.initialX + this.speed * this.tickNumber * cos(this.initialAngle);
+      this.initialX + this.speed * this.timeSinceStart * cos(this.initialAngle);
     this.y =
       this.initialY +
-      this.speed * this.tickNumber * sin(this.initialAngle) -
-      0.5 * G * this.tickNumber ** 2;
+      this.speed * this.timeSinceStart * sin(this.initialAngle) -
+      0.5 * CONFIG.GRAVITY_FORCE * this.timeSinceStart ** 2;
 
-    if (this.speed <= 2) {
+    if (this.speed <= CONFIG.ROCKET.MINIMAL_SPEED) {
       this.speed = 0;
     }
-    // slow normalization of the object angle in the eng of the simulation
-    if (this.speed <= 20) {
-      this.currentAngle = this.oppositeDirection ? -1 : 1;
+    if (this.speed <= CONFIG.ROCKET.SPEED_TO_FIX_ANGLE) {
+      this.currentAngle = 0;
     }
-    // const timeToGround = (2 * this.speed * sin(this.initialAngle)) / (G * 3);
 
-    // else {
-    //   this.currentAngle =
-    //     this.initialAngle +
-    //     (this.xMultiplier *
-    //       ((this.tickNumber / timeToGround) * this.initialAngle)) /
-    //       2;
-    // }
-    this.tickNumber += (1 / 60) * 5;
+    // assume that we're at 60fps
+    this.timeSinceStart += (1 / 60) * CONFIG.ROCKET.MAGIC_TIME_MULTIPLIER;
   }
 
   render() {
