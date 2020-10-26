@@ -7,9 +7,10 @@ export class RenderContext {
 
   private canvasHeight: number;
 
+  // todo add getters
   public offsetX: number = 0;
 
-  private offsetY: number = 0;
+  public offsetY: number = 0;
 
   constructor(selector: string) {
     this.element = document.querySelector(selector) as HTMLCanvasElement;

@@ -7,6 +7,7 @@ import { Ground } from './objects/ground';
 import { Wall } from './objects/wall';
 import { CONFIG } from './config';
 import { repeat } from './utils/repeat';
+import { Sky } from './objects/sky';
 
 export class Simulation {
   private renderLoop: RenderLoop;
@@ -27,6 +28,7 @@ export class Simulation {
       target: this.rocket,
       renderContext: this.renderContext,
     });
+    this.renderLoop.addGameObject(new Sky(this.renderContext));
     repeat(CONFIG.WALLS.REPEAT_TIMES, (index) => {
       this.renderLoop.addGameObject(
         new Wall({
