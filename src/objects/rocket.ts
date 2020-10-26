@@ -109,13 +109,7 @@ export class Rocket implements GameObject {
     }
     // slow normalization of the object angle in the eng of the simulation
     if (this.speed <= 20) {
-      const endAngle = this.oppositeDirection ? -90 : 90;
-      const angleCorrectionSpeed = 50;
-      this.currentAngle = Math.floor(
-        (this.currentAngle * angleCorrectionSpeed + endAngle) /
-          angleCorrectionSpeed +
-          1
-      );
+      this.currentAngle = this.oppositeDirection ? -1 : 1;
     }
     // const timeToGround = (2 * this.speed * sin(this.initialAngle)) / (G * 3);
 

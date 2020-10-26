@@ -43,7 +43,7 @@ export function getCollisions(
       collisionType = CollisionType.LEFT;
     }
 
-    if (collisionType) {
+    if (typeof collisionType !== 'undefined') {
       collisions.push({ type: collisionType, diffX, diffY });
     }
   });
