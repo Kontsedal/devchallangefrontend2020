@@ -1,9 +1,10 @@
 import { GameObject } from '../interfaces/gameObject';
+import { CONFIG } from '../config';
 
 export enum CollisionType {
-  RIGHT,
-  LEFT,
-  BOTTOM,
+  RIGHT = 'RIGHT',
+  LEFT = 'LEFT',
+  BOTTOM = 'BOTTOM',
 }
 
 export type Collision = {
@@ -22,24 +23,41 @@ export function getCollisions(
     if (obj === target || !target.collides || !obj.collidable) {
       return;
     }
-    const ol = obj.x;
-    const ot = obj.y;
-    const or = ol + obj.width;
+    const objLeft = obj.x;
+    const objTop = obj.y;
+    const objRight = objLeft + obj.width;
 
-    const tl = target.x;
-    const tt = target.y;
-    const tb = tt;
-    const tr = tl + target.width / 2;
+    const targetLeft = target.x;
+    const targetTop = target.y;
+    const targetBottom = targetTop;
+    const targetRight = targetLeft + target.width / 2;
     let diffX = 0;
-    const diffY = ot - tb;
-
-    if (tr > ol && tl < ol && tb < ot && Math.abs(tr - ol) <= 10) {
-      diffX = tr - ol;
+    const diffY = objTop - targetBottom;
+    const overlappedFromRight = targetRight > objLeft && targetLeft < objLeft;
+    const overlappedFromLeft = targetLeft < objRight && targetRight > objLeft;
+    const overlappedFromBottom = targetBottom < objTop;
+    if (
+      overlappedFromRight &&
+      overlappedFromBottom &&
+      Math.abs(targetRight - objLeft) <= CONFIG.MAX_COLLISION_DEPTH
+    ) {
+      diffX = targetRight - objLeft;
       collisionType = CollisionType.RIGHT;
-    } else if (tr > ol && tr < or && tb < ot && Math.abs(ot - tb) <= 10) {
+    }
+    if (
+      targetRight > objLeft &&
+      targetRight < objRight &&
+      targetBottom < objTop &&
+      Math.abs(objTop - targetBottom) <= CONFIG.MAX_COLLISION_DEPTH
+    ) {
       collisionType = CollisionType.BOTTOM;
-    } else if (tl < or && tr > ol && tb < ot && Math.abs(or - tl) <= 10) {
-      diffX = or - tl;
+    }
+    if (
+      overlappedFromLeft &&
+      overlappedFromBottom &&
+      Math.abs(objRight - targetLeft) <= CONFIG.MAX_COLLISION_DEPTH
+    ) {
+      diffX = objRight - targetLeft;
       collisionType = CollisionType.LEFT;
     }
 

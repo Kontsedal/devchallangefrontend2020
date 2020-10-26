@@ -5,21 +5,19 @@ import { CONFIG } from '../config';
 type Options = {
   target: GameObject;
   renderContext: RenderContext;
-  x: number;
-  y: number;
 };
 export class Camera implements GameObject {
   private readonly target: GameObject;
 
   private readonly renderContext: RenderContext;
 
-  private readonly initialX: number;
+  private readonly initialX: number = CONFIG.CAMERA.INITIAL_X;
 
-  public x: number;
+  public x: number = CONFIG.CAMERA.INITIAL_X;
 
-  private readonly initialY: number;
+  private readonly initialY: number = CONFIG.CAMERA.INITIAL_Y;
 
-  public y: number;
+  public y: number = CONFIG.CAMERA.INITIAL_Y;
 
   public width = 0;
 
@@ -29,13 +27,9 @@ export class Camera implements GameObject {
 
   public collides = false;
 
-  constructor({ target, renderContext, x, y }: Options) {
+  constructor({ target, renderContext }: Options) {
     this.target = target;
     this.renderContext = renderContext;
-    this.initialX = x;
-    this.initialY = y;
-    this.x = x;
-    this.y = y;
   }
 
   update() {

@@ -5,30 +5,23 @@ import rocketImageSrc from '../assets/rocket.png';
 import { Collision, CollisionType } from '../core/collision';
 import { CONFIG } from '../config';
 
-type Options = {
-  x: number;
-  y: number;
-  angle: number;
-  speed: number;
-  context: RenderContext;
-};
 function denormalizeAngle(angle: number, isOpposite: boolean): number {
   return Math.abs(angle - (isOpposite ? 270 : 90));
 }
 export class Rocket implements GameObject {
-  public x: number;
+  public x: number = CONFIG.ROCKET.INITIAL_X;
 
-  private initialX: number;
+  private initialX: number = CONFIG.ROCKET.INITIAL_X;
 
-  public y: number;
+  public y: number = CONFIG.ROCKET.INITIAL_Y;
 
-  private initialY: number;
+  private initialY: number = CONFIG.ROCKET.INITIAL_Y;
 
-  private initialAngle: number;
+  private initialAngle: number = CONFIG.ROCKET.INITIAL_ANGLE;
 
-  private currentAngle: number;
+  private currentAngle: number = CONFIG.ROCKET.INITIAL_ANGLE;
 
-  private speed: number;
+  private speed: number = CONFIG.ROCKET.INITIAL_SPEED;
 
   private renderContext: RenderContext;
 
@@ -46,14 +39,7 @@ export class Rocket implements GameObject {
 
   private oppositeDirection: boolean = false;
 
-  constructor(options: Options) {
-    this.x = options.x;
-    this.initialX = options.x;
-    this.y = options.y;
-    this.initialY = options.y;
-    this.initialAngle = options.angle;
-    this.currentAngle = this.initialAngle;
-    this.speed = options.speed;
+  constructor(options: { context: RenderContext }) {
     this.renderContext = options.context;
     this.img = new Image();
     this.img.src = rocketImageSrc;
@@ -77,14 +63,14 @@ export class Rocket implements GameObject {
           ? -this.currentAngle
           : 180 - this.currentAngle;
       }
-      if (collision.type === CollisionType.RIGHT && !this.oppositeDirection) {
+      if (collision.type === CollisionType.RIGHT) {
         this.initialX = this.x - collision.diffX;
         this.initialY = this.y;
         this.initialAngle = 180 - this.currentAngle;
         this.oppositeDirection = true;
       }
 
-      if (collision.type === CollisionType.LEFT && this.oppositeDirection) {
+      if (collision.type === CollisionType.LEFT) {
         this.initialX = this.x + collision.diffX;
         this.initialY = this.y;
         this.initialAngle = -this.currentAngle;
@@ -112,7 +98,7 @@ export class Rocket implements GameObject {
     }
 
     // assume that we're at 60fps
-    this.timeSinceStart += (1 / 60) * CONFIG.ROCKET.MAGIC_TIME_MULTIPLIER;
+    this.timeSinceStart += (1 / 60) * CONFIG.ROCKET.SIMULATION_SPEED;
   }
 
   render() {

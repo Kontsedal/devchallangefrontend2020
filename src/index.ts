@@ -21,17 +21,11 @@ export class Simulation {
     this.renderContext = new RenderContext(CONFIG.CANVAS_SELECTOR);
     this.renderLoop = new RenderLoop({ renderContext: this.renderContext });
     this.rocket = new Rocket({
-      x: CONFIG.ROCKET.INITIAL_X,
-      y: CONFIG.ROCKET.INITIAL_Y,
-      angle: CONFIG.ROCKET.INITIAL_ANGLE,
-      speed: CONFIG.ROCKET.INITIAL_SPEED,
       context: this.renderContext,
     });
     this.camera = new Camera({
       target: this.rocket,
       renderContext: this.renderContext,
-      x: CONFIG.CAMERA.INITIAL_X,
-      y: CONFIG.CAMERA.INITIAL_Y,
     });
     repeat(CONFIG.WALLS.REPEAT_TIMES, (index) => {
       this.renderLoop.addGameObject(
