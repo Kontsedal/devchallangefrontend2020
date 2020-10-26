@@ -1,6 +1,6 @@
-import { GameObject } from '../interfaces/GameObject.ts';
+import { GameObject } from '../interfaces/GameObject';
 import groundImageSrc from '../assets/ground.png';
-import { RenderContext } from '../core/renderContext.ts';
+import { RenderContext } from '../core/renderContext';
 
 export class Ground implements GameObject {
   x: number = -100;

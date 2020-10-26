@@ -1,5 +1,5 @@
-import { GameObject } from '../interfaces/GameObject.ts';
-import { Collision, CollisionType } from '../interfaces/Collision.ts';
+import { GameObject } from '../interfaces/GameObject';
+import { Collision, CollisionType } from '../interfaces/Collision';
 
 export function getCollisions(
   objects: GameObject[],

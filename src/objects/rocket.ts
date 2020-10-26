@@ -1,8 +1,8 @@
-import { GameObject } from '../interfaces/GameObject.ts';
-import { RenderContext } from '../core/renderContext.ts';
-import { cos, degreesToRadians, radiansToDegrees, sin } from '../core/math.ts';
+import { GameObject } from '../interfaces/GameObject';
+import { RenderContext } from '../core/renderContext';
+import { cos, degreesToRadians, radiansToDegrees, sin } from '../core/math';
 import rocketImageSrc from '../assets/rocket.png';
-import { Collision, CollisionType } from '../interfaces/Collision.ts';
+import { Collision, CollisionType } from '../interfaces/Collision';
 
 type Options = {
   x: number;

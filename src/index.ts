@@ -1,12 +1,12 @@
 import './index.scss';
-import { RenderLoop } from './src/core/renderLoop.ts';
-import { GameObject } from './src/interfaces/GameObject.ts';
-import { Rocket } from './src/objects/rocket.ts';
-import { RenderContext } from './src/core/renderContext.ts';
-import { Camera } from './src/objects/camera.ts';
-import { Ground } from './src/objects/ground.ts';
-import { Wall } from './src/objects/wall.ts';
-import { getCollisions } from './src/core/collision.ts';
+import { RenderLoop } from './core/renderLoop';
+import { GameObject } from './interfaces/GameObject';
+import { Rocket } from './objects/rocket';
+import { RenderContext } from './core/renderContext';
+import { Camera } from './objects/camera';
+import { Ground } from './objects/ground';
+import { Wall } from './objects/wall';
+import { getCollisions } from './core/collision';
 
 export class Simulation {
   private renderLoop: RenderLoop;
