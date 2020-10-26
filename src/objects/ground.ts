@@ -1,4 +1,4 @@
-import { GameObject } from '../interfaces/GameObject';
+import { GameObject } from '../interfaces/gameObject';
 import groundImageSrc from '../assets/ground.png';
 import { RenderContext } from '../core/renderContext';
 

@@ -14,5 +14,18 @@ module.exports = {
     'import/prefer-default-export': 0,
     'no-console': 0,
     'class-methods-use-this': 0,
+    'import/extensions': 0,
+    'no-unused-vars': 0,
+    '@typescript-eslint/no-unused-vars': 'error',
+    'no-shadow': 0,
+    '@typescript-eslint/no-shadow': ['error'],
+  },
+  settings: {
+    'import/resolver': {
+      node: {
+        paths: ['src'],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      },
+    },
   },
 };

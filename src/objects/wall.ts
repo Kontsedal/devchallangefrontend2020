@@ -1,5 +1,5 @@
 import { RenderContext } from '../core/renderContext';
-import { GameObject } from '../interfaces/GameObject';
+import { GameObject } from '../interfaces/gameObject';
 
 type Options = {
   renderContext: RenderContext;

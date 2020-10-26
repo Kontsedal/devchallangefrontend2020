@@ -1,7 +1,7 @@
-import { Collision } from './Collision';
+import { Collision } from '../core/collision';
 
 export interface GameObject {
-  update: (collisions: Collision[]) => void;
+  update(collisions: Collision[]): void;
   render: () => void;
   x: number;
   y: number;

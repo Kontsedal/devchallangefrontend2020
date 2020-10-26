@@ -17,5 +17,5 @@ module.exports = {
       loaders.lintTypescript,
     ],
   },
-  plugins: [plugins.processIndexHtml],
+  plugins: [plugins.processIndexHtml, plugins.extractCssFromBundle],
 };

@@ -1,6 +1,6 @@
 import './index.scss';
 import { RenderLoop } from './core/renderLoop';
-import { GameObject } from './interfaces/GameObject';
+import { GameObject } from './interfaces/gameObject';
 import { Rocket } from './objects/rocket';
 import { RenderContext } from './core/renderContext';
 import { Camera } from './objects/camera';
@@ -11,28 +11,25 @@ import { getCollisions } from './core/collision';
 export class Simulation {
   private renderLoop: RenderLoop;
 
-  private renderContext: RenderContext;
+  private readonly renderContext: RenderContext;
 
   private gameObjects: GameObject[] = [];
 
-  private rocket: Rocket;
+  private readonly rocket: Rocket;
 
-  private camera: Camera;
+  private readonly camera: Camera;
 
   constructor() {
     this.renderLoop = new RenderLoop({
       onUpdate: this.update.bind(this),
       onRender: this.render.bind(this),
     });
-  }
-
-  start() {
     this.renderContext = new RenderContext('.js-canvas');
     this.rocket = new Rocket({
       x: 50,
       y: 100,
-      angle: 15,
-      speed: 150,
+      angle: 45,
+      speed: 120,
       context: this.renderContext,
     });
     this.camera = new Camera({
@@ -41,6 +38,9 @@ export class Simulation {
       x: 20,
       y: -35,
     });
+  }
+
+  start() {
     new Array(40).fill(0).forEach((_, index) => {
       this.gameObjects.push(
         new Wall({ renderContext: this.renderContext, x: 700 + 400 * index })

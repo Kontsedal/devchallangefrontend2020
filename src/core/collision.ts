@@ -1,5 +1,16 @@
-import { GameObject } from '../interfaces/GameObject';
-import { Collision, CollisionType } from '../interfaces/Collision';
+import { GameObject } from '../interfaces/gameObject';
+
+export enum CollisionType {
+  RIGHT,
+  LEFT,
+  BOTTOM,
+}
+
+export type Collision = {
+  type: CollisionType;
+  diffX: number;
+  diffY: number;
+};
 
 export function getCollisions(
   objects: GameObject[],
@@ -7,7 +18,7 @@ export function getCollisions(
 ): Collision[] {
   const collisions: Collision[] = [];
   objects.forEach((obj) => {
-    let collisionType: CollisionType;
+    let collisionType: CollisionType | undefined;
     if (obj === target || !target.collides || !obj.collidable) {
       return;
     }
@@ -32,7 +43,7 @@ export function getCollisions(
       collisionType = CollisionType.LEFT;
     }
 
-    if (typeof collisionType !== 'undefined') {
+    if (collisionType) {
       collisions.push({ type: collisionType, diffX, diffY });
     }
   });

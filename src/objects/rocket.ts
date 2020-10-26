@@ -1,8 +1,8 @@
-import { GameObject } from '../interfaces/GameObject';
+import { GameObject } from '../interfaces/gameObject';
 import { RenderContext } from '../core/renderContext';
 import { cos, degreesToRadians, radiansToDegrees, sin } from '../core/math';
 import rocketImageSrc from '../assets/rocket.png';
-import { Collision, CollisionType } from '../interfaces/Collision';
+import { Collision, CollisionType } from '../core/collision';
 
 type Options = {
   x: number;
@@ -109,8 +109,12 @@ export class Rocket implements GameObject {
     }
     // slow normalization of the object angle in the eng of the simulation
     if (this.speed <= 20) {
+      const endAngle = this.oppositeDirection ? -90 : 90;
+      const angleCorrectionSpeed = 50;
       this.currentAngle = Math.floor(
-        (this.currentAngle * 50 + this.oppositeDirection ? -90 : 90) / 51
+        (this.currentAngle * angleCorrectionSpeed + endAngle) /
+          angleCorrectionSpeed +
+          1
       );
     }
     // const timeToGround = (2 * this.speed * sin(this.initialAngle)) / (G * 3);

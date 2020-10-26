@@ -1,3 +1,5 @@
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 const processTypescriptFiles = {
   test: /\.ts?$/,
   use: 'ts-loader',
