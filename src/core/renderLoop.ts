@@ -1,23 +1,24 @@
+import { GameObject } from '../interfaces/gameObject';
+import { getCollisions } from './collision';
+import { RenderContext } from './renderContext';
+
 type Options = {
   fps?: number;
-  onRender: () => void;
-  onUpdate: () => void;
+  renderContext: RenderContext;
 };
 
 export class RenderLoop {
   private readonly frameLengthSeconds: number;
 
-  private readonly onRender: () => void;
+  private animationFrameId: number = 0;
 
-  private readonly onUpdate: () => void;
+  private gameObjects: GameObject[] = [];
 
-  private animationFrameId: number;
+  private renderContext: RenderContext;
 
-  constructor({ fps = 60, onRender, onUpdate }: Options) {
+  constructor({ fps = 60, renderContext }: Options) {
     this.frameLengthSeconds = 1 / fps;
-    this.onRender = onRender;
-    this.onUpdate = onUpdate;
-    this.animationFrameId = 0;
+    this.renderContext = renderContext;
   }
 
   start() {
@@ -29,13 +30,29 @@ export class RenderLoop {
       tickTimeDelta += Math.min(1, (currentTimestamp - lastTimestamp) / 1000);
       while (tickTimeDelta > this.frameLengthSeconds) {
         tickTimeDelta -= this.frameLengthSeconds;
-        this.onUpdate();
+        this.update();
       }
       lastTimestamp = currentTimestamp;
 
-      this.onRender();
+      this.render();
       this.animationFrameId = requestAnimationFrame(tick);
     };
     this.animationFrameId = requestAnimationFrame(tick);
+  }
+
+  update() {
+    this.gameObjects.forEach((obj) => {
+      const collisions = getCollisions(this.gameObjects, obj);
+      obj.update(collisions);
+    });
+  }
+
+  render() {
+    this.renderContext.clear();
+    this.gameObjects.forEach((obj) => obj.render());
+  }
+
+  addGameObject(obj: GameObject) {
+    this.gameObjects.push(obj);
   }
 }
