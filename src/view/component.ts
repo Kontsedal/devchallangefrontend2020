@@ -1,7 +1,8 @@
 export class Component<S extends Record<string, any>> {
   private prevState: S | undefined;
 
-  public state: S | undefined;
+  // @ts-ignore
+  public state;
 
   setState(newState: S) {
     this.prevState = this.state;
@@ -35,6 +36,18 @@ export class Component<S extends Record<string, any>> {
     if (this.isStateEntriesChanged(statePaths)) {
       callback();
     }
+  }
+
+  setStyles(element: HTMLElement | void, styles: Partial<CSSStyleDeclaration>) {
+    if (!element) {
+      return;
+    }
+
+    Object.entries(styles).forEach(([key, value]) => {
+      // @ts-ignore
+      // eslint-disable-next-line no-param-reassign
+      element.style[key] = typeof value === 'number' ? `${value}px` : value;
+    });
   }
 
   render() {}

@@ -1,31 +1,65 @@
 import { Component } from './component';
 import { Simulation } from '../simulation/simulation';
+import { CONFIG } from '../config';
 
-type State = {};
+type State = {
+  rocketPosition: {
+    x: number;
+    y: number;
+  };
+};
 export class App extends Component<State> {
-  private selectors = {};
+  private selectors = {
+    ARROW: '.js-arrow',
+    MOVER: '.js-mover',
+  };
 
   private simulation: Simulation;
 
+  private arrowElement: HTMLElement | undefined;
+
+  private moverElement: HTMLElement | undefined;
+
   constructor() {
     super();
-    this.state = {};
     this.simulation = new Simulation();
+    this.state = {
+      rocketPosition: this.simulation.getRocketPosition(),
+    };
   }
 
   async init() {
     this.attachEventListeners();
-    this.render();
     await this.simulation.init();
     this.simulation.update();
     this.simulation.render();
+    this.render();
+    this.simulation.start();
   }
 
   attachEventListeners() {
+    this.arrowElement = document.querySelector(
+      this.selectors.ARROW
+    ) as HTMLElement;
+
+    this.moverElement = document.querySelector(
+      this.selectors.MOVER
+    ) as HTMLElement;
     window.addEventListener('resize', () => {
       this.simulation.render();
     });
   }
 
-  render() {}
+  render() {
+    this.effect(() => {
+      this.setStyles(this.arrowElement, {
+        left: this.state.rocketPosition.x,
+        top: this.state.rocketPosition.y,
+      });
+      this.setStyles(this.moverElement, {
+        left: this.state.rocketPosition.x,
+        top: this.state.rocketPosition.y,
+      });
+    }, ['rocketPosition']);
+  }
 }

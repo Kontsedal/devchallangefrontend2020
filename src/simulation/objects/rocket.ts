@@ -28,9 +28,9 @@ export class Rocket implements GameObject {
 
   private timeSinceStart = 0;
 
-  public width = 40;
+  public width = CONFIG.ROCKET.WIDTH;
 
-  public height = 40;
+  public height = CONFIG.ROCKET.HEIGHT;
 
   public readonly collidable = true;
 
@@ -107,6 +107,13 @@ export class Rocket implements GameObject {
     this.timeSinceStart += (1 / 60) * CONFIG.ROCKET.SIMULATION_SPEED;
   }
 
+  setPosition(position: { x: number; y: number }) {
+    this.initialX = position.x;
+    this.initialY = position.y;
+    this.x = position.x;
+    this.y = position.y;
+  }
+
   render() {
     const canvasContext = this.renderContext.getContext();
     canvasContext.save();
@@ -119,8 +126,20 @@ export class Rocket implements GameObject {
         denormalizeAngle(this.currentAngle, this.oppositeDirection)
       )
     );
+    console.log({
+      x: this.renderContext.getCurrentX(this.x),
+      y: this.renderContext.getCurrentY(this.y),
+      currentX: this.x,
+      currentY: this.y,
+    });
     canvasContext.drawImage(
       this.img,
+      -this.width / 2,
+      -this.height / 2,
+      this.width,
+      this.height
+    );
+    canvasContext.strokeRect(
       -this.width / 2,
       -this.height / 2,
       this.width,

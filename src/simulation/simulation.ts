@@ -78,4 +78,15 @@ export class Simulation {
   update() {
     this.renderLoop.update();
   }
+
+  getRocketPosition(): { x: number; y: number } {
+    return {
+      x: this.renderContext.getCurrentX(this.rocket.x),
+      y: this.renderContext.getCurrentY(this.rocket.y),
+    };
+  }
+
+  setRocketPosition(position: { x: number; y: number }) {
+    this.rocket.setPosition(position);
+  }
 }
