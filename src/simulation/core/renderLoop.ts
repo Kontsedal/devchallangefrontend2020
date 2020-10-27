@@ -40,6 +40,10 @@ export class RenderLoop {
     this.animationFrameId = requestAnimationFrame(tick);
   }
 
+  stop() {
+    cancelAnimationFrame(this.animationFrameId);
+  }
+
   update() {
     this.gameObjects.forEach((obj) => {
       const collisions = getCollisions(this.gameObjects, obj);

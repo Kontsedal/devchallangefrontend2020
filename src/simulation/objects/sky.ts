@@ -1,6 +1,7 @@
 import { GameObject } from '../interfaces/gameObject';
-import skyImageSrc from '../assets/sky.jpg';
+import skyImageSrc from '../../assets/sky.jpg';
 import { RenderContext } from '../core/renderContext';
+import { AssetsManager } from '../core/assets';
 
 export class Sky implements GameObject {
   x: number = 0;
@@ -19,18 +20,26 @@ export class Sky implements GameObject {
 
   public collides = false;
 
-  constructor(context: RenderContext) {
-    this.renderContext = context;
-    this.img = new Image();
-    this.img.src = skyImageSrc;
+  constructor({
+    renderContext,
+    assetsManager,
+  }: {
+    renderContext: RenderContext;
+    assetsManager: AssetsManager;
+  }) {
+    this.renderContext = renderContext;
+    this.img = assetsManager.register(skyImageSrc);
+    this.calculateSize();
   }
 
   render() {
     const context = this.renderContext.getContext();
     context.save();
     context.translate(
-      this.renderContext.getCurrentX(0),
-      -this.renderContext.getCurrentY(2 * this.renderContext.offsetY)
+      this.renderContext.getCurrentX(-this.renderContext.getWidth() * 25),
+      -this.renderContext.getCurrentY(
+        -this.renderContext.getHeight() + 2 * this.renderContext.offsetY
+      )
     );
     context.fillStyle = context.createPattern(
       this.img,
@@ -41,8 +50,11 @@ export class Sky implements GameObject {
   }
 
   update() {
-    this.width = this.renderContext.getWidth() - this.renderContext.offsetX;
-    this.height =
-      this.renderContext.getWidth() * 2 + this.renderContext.offsetY;
+    this.calculateSize();
+  }
+
+  calculateSize() {
+    this.width = this.renderContext.getWidth() * 50;
+    this.height = this.renderContext.getHeight() * 50;
   }
 }

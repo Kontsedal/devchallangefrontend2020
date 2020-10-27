@@ -1,5 +1,5 @@
 import { GameObject } from '../interfaces/gameObject';
-import { CONFIG } from '../config';
+import { CONFIG } from '../../config';
 
 export enum CollisionType {
   RIGHT = 'RIGHT',

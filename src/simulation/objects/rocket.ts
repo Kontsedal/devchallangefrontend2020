@@ -1,9 +1,10 @@
 import { GameObject } from '../interfaces/gameObject';
 import { RenderContext } from '../core/renderContext';
 import { cos, degreesToRadians, radiansToDegrees, sin } from '../core/math';
-import rocketImageSrc from '../assets/rocket.png';
+import rocketImageSrc from '../../assets/rocket.png';
 import { Collision, CollisionType } from '../core/collision';
-import { CONFIG } from '../config';
+import { CONFIG } from '../../config';
+import { AssetsManager } from '../core/assets';
 
 function denormalizeAngle(angle: number, isOpposite: boolean): number {
   return Math.abs(angle - (isOpposite ? 270 : 90));
@@ -39,10 +40,15 @@ export class Rocket implements GameObject {
 
   private oppositeDirection: boolean = false;
 
-  constructor(options: { context: RenderContext }) {
-    this.renderContext = options.context;
-    this.img = new Image();
-    this.img.src = rocketImageSrc;
+  constructor({
+    assetsManager,
+    renderContext,
+  }: {
+    renderContext: RenderContext;
+    assetsManager: AssetsManager;
+  }) {
+    this.renderContext = renderContext;
+    this.img = assetsManager.register(rocketImageSrc);
   }
 
   update(collisions: Collision[]) {

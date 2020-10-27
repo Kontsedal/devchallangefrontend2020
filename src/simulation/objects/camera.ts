@@ -1,6 +1,6 @@
 import { RenderContext } from '../core/renderContext';
 import { GameObject } from '../interfaces/gameObject';
-import { CONFIG } from '../config';
+import { CONFIG } from '../../config';
 
 type Options = {
   target: GameObject;

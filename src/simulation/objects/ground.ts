@@ -1,6 +1,7 @@
 import { GameObject } from '../interfaces/gameObject';
-import groundImageSrc from '../assets/ground.png';
+import groundImageSrc from '../../assets/ground.png';
 import { RenderContext } from '../core/renderContext';
+import { AssetsManager } from '../core/assets';
 
 export class Ground implements GameObject {
   x: number = -100;
@@ -19,10 +20,16 @@ export class Ground implements GameObject {
 
   public collides = false;
 
-  constructor(context: RenderContext) {
-    this.renderContext = context;
-    this.img = new Image();
-    this.img.src = groundImageSrc;
+  constructor({
+    renderContext,
+    assetsManager,
+  }: {
+    renderContext: RenderContext;
+    assetsManager: AssetsManager;
+  }) {
+    this.renderContext = renderContext;
+    this.img = assetsManager.register(groundImageSrc);
+    this.calculateSize();
   }
 
   render() {
@@ -41,6 +48,10 @@ export class Ground implements GameObject {
   }
 
   update() {
+    this.calculateSize();
+  }
+
+  calculateSize() {
     this.width =
       this.renderContext.getWidth() - this.renderContext.offsetX + 100;
   }
