@@ -92,6 +92,9 @@ export class Simulation {
   }
 
   setRocketPosition(position: { x: number; y: number }) {
-    this.rocket.setPosition(position);
+    this.rocket.setPosition({
+      x: this.camera.normalizeX(position.x),
+      y: this.camera.normalizeY(position.y),
+    });
   }
 }

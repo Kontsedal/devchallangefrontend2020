@@ -145,12 +145,6 @@ export class Rocket implements GameObject {
       this.width,
       this.height
     );
-    canvasContext.strokeRect(
-      -this.width / 2,
-      -this.height / 2,
-      this.width,
-      this.height
-    );
     canvasContext.restore();
   }
 }

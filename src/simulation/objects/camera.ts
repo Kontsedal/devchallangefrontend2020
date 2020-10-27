@@ -87,5 +87,13 @@ export class Camera implements GameObject {
     return originalX + this.x;
   }
 
+  normalizeX(x: number): number {
+    return x - this.x;
+  }
+
+  normalizeY(y: number): number {
+    return this.renderContext.getHeight() + this.y - y;
+  }
+
   render(): void {}
 }

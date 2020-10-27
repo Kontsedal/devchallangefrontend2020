@@ -1,6 +1,7 @@
 import { Component } from './component';
 import { Simulation } from '../simulation/simulation';
 import { CONFIG } from '../config';
+import { onMove } from '../simulation/utils/dom';
 
 type State = {
   rocketPosition: {
@@ -12,6 +13,7 @@ export class App extends Component<State> {
   private selectors = {
     ARROW: '.js-arrow',
     MOVER: '.js-mover',
+    START_BUTTON: '.js-start',
   };
 
   private simulation: Simulation;
@@ -19,6 +21,8 @@ export class App extends Component<State> {
   private arrowElement: HTMLElement | undefined;
 
   private moverElement: HTMLElement | undefined;
+
+  private startButtonElement: HTMLElement | undefined;
 
   constructor() {
     super();
@@ -43,8 +47,29 @@ export class App extends Component<State> {
     this.moverElement = document.querySelector(
       this.selectors.MOVER
     ) as HTMLElement;
+
+    this.startButtonElement = document.querySelector(
+      this.selectors.START_BUTTON
+    ) as HTMLElement;
+
     window.addEventListener('resize', () => {
       this.simulation.render();
+    });
+
+    this.startButtonElement.addEventListener('click', () => {
+      this.simulation.start();
+    });
+    onMove({
+      target: this.moverElement,
+      initialPosition: this.state.rocketPosition,
+      callback: (newPosition) => {
+        this.setState({
+          ...this.state,
+          rocketPosition: newPosition,
+        });
+        this.simulation.setRocketPosition(newPosition);
+        this.simulation.render();
+      },
     });
   }
 
@@ -57,6 +82,8 @@ export class App extends Component<State> {
       this.setStyles(this.moverElement, {
         left: this.state.rocketPosition.x,
         top: this.state.rocketPosition.y,
+        width: CONFIG.ROCKET.WIDTH,
+        height: CONFIG.ROCKET.HEIGHT,
       });
     }, ['rocketPosition']);
   }

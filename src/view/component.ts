@@ -38,7 +38,10 @@ export class Component<S extends Record<string, any>> {
     }
   }
 
-  setStyles(element: HTMLElement | void, styles: Partial<CSSStyleDeclaration>) {
+  setStyles(
+    element: HTMLElement | void,
+    styles: Partial<Record<keyof CSSStyleDeclaration, string | number>>
+  ) {
     if (!element) {
       return;
     }
