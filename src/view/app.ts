@@ -2,6 +2,7 @@ import { Component } from './component';
 import { Simulation } from '../simulation/simulation';
 import { CONFIG } from '../config';
 import { onMove } from '../simulation/utils/dom';
+import { denormalizeAngle } from '../simulation/utils/angle';
 
 type State = {
   rocketPosition: {
@@ -29,6 +30,8 @@ export class App extends Component<State> {
     this.simulation = new Simulation();
     this.state = {
       rocketPosition: this.simulation.getRocketPosition(),
+      rocketAngle: this.simulation.getRocketAngle(),
+      rocketInOppositeDirection: this.simulation.isRocketInOppositeDirection(),
       running: false,
     };
   }
@@ -37,6 +40,8 @@ export class App extends Component<State> {
     this.setState({
       ...this.state,
       rocketPosition: this.simulation.getRocketPosition(),
+      rocketAngle: this.simulation.getRocketAngle(),
+      rocketInOppositeDirection: this.simulation.isRocketInOppositeDirection(),
     });
   }
 
@@ -120,5 +125,14 @@ export class App extends Component<State> {
         this.elements.CONTAINER.classList.remove('running');
       }
     }, ['running']);
+
+    this.effect(() => {
+      this.setStyles(this.elements.ARROW, {
+        transform: `translateY(-100%) rotate(${denormalizeAngle(
+          this.state.rocketAngle,
+          this.state.rocketInOppositeDirection
+        )}deg)`,
+      });
+    }, ['rocketAngle', 'rocketInOppositeDirection']);
   }
 }

@@ -6,10 +6,8 @@ import { Collision, CollisionType } from '../core/collision';
 import { CONFIG } from '../../config';
 import { AssetsManager } from '../core/assets';
 import { Camera } from './camera';
+import { denormalizeAngle } from '../utils/angle';
 
-function denormalizeAngle(angle: number, isOpposite: boolean): number {
-  return Math.abs(angle - (isOpposite ? 270 : 90));
-}
 export class Rocket implements GameObject {
   public x: number = CONFIG.ROCKET.INITIAL_X;
 
@@ -148,5 +146,13 @@ export class Rocket implements GameObject {
       this.height
     );
     canvasContext.restore();
+  }
+
+  getAngle() {
+    return this.currentAngle;
+  }
+
+  isOppositeDirection() {
+    return this.oppositeDirection;
   }
 }

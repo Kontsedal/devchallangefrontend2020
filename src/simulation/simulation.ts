@@ -97,4 +97,12 @@ export class Simulation {
       y: this.camera.normalizeY(position.y),
     });
   }
+
+  getRocketAngle(): number {
+    return this.rocket.getAngle();
+  }
+
+  isRocketInOppositeDirection(): boolean {
+    return this.rocket.isOppositeDirection();
+  }
 }
