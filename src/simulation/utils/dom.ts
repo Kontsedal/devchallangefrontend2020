@@ -5,8 +5,8 @@ export const onMove = ({
   onDrop,
 }: {
   target: HTMLElement | void;
-  onDrag: (newPosition: Position) => void;
-  onDrop: (newPosition: Position) => void;
+  onDrag?: (newPosition: Position) => void;
+  onDrop?: (newPosition: Position) => void;
   initialPosition: Position;
 }) => {
   if (!target) {
@@ -20,13 +20,17 @@ export const onMove = ({
     const moveHandler = (moveEvent: MouseEvent) => {
       xDiff = moveEvent.clientX - initialX;
       yDiff = moveEvent.clientY - initialY;
-      onDrag({ x: initialX + xDiff, y: initialY + yDiff });
+      if (typeof onDrag === 'function') {
+        onDrag({ x: initialX + xDiff, y: initialY + yDiff });
+      }
     };
     document.addEventListener('mousemove', moveHandler);
     document.addEventListener('mouseup', function handleUp() {
       document.removeEventListener('mouseup', handleUp);
       document.removeEventListener('mousemove', moveHandler);
-      onDrop({ x: initialX + xDiff, y: initialY + yDiff });
+      if (typeof onDrop === 'function') {
+        onDrop({ x: initialX + xDiff, y: initialY + yDiff });
+      }
     });
   });
 };

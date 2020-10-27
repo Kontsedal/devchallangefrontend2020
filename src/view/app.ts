@@ -83,8 +83,6 @@ export class App extends Component<State> {
           ...this.state,
           rocketPosition: this.normalizeMovePosition(newPosition),
         });
-      },
-      onDrop: (newPosition) => {
         this.simulation.setRocketPosition(
           this.normalizeMovePosition(newPosition)
         );
