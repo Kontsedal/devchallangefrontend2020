@@ -132,12 +132,6 @@ export class Rocket implements GameObject {
         denormalizeAngle(this.currentAngle, this.oppositeDirection)
       )
     );
-    console.log({
-      x: this.camera.getCurrentX(this.x),
-      y: this.camera.getCurrentY(this.y),
-      currentX: this.x,
-      currentY: this.y,
-    });
     canvasContext.drawImage(
       this.img,
       -this.width / 2,
@@ -154,5 +148,17 @@ export class Rocket implements GameObject {
 
   isOppositeDirection() {
     return this.oppositeDirection;
+  }
+
+  getSpeed() {
+    return this.speed;
+  }
+
+  setSpeed(speed: number) {
+    this.initialX = this.x;
+    this.initialY = this.y;
+    this.timeSinceStart = 0;
+    this.initialAngle = this.currentAngle;
+    this.speed = speed;
   }
 }

@@ -10,14 +10,18 @@ type State = {
     y: number;
   };
   running: boolean;
+  rocketAngle: number;
+  rocketSpeed: number;
+  rocketInOppositeDirection: boolean;
 };
 
 const SELECTORS = {
-  ARROW: '.js-arrow',
-  MOVER: '.js-mover',
-  START_BUTTON: '.js-start',
-  PAUSE_BUTTON: '.js-pause',
-  CONTAINER: '.js-root',
+  arrow: '.js-arrow',
+  mover: '.js-mover',
+  startButton: '.js-start',
+  pauseButton: '.js-pause',
+  container: '.js-root',
+  arrowHead: '.js-arrow-head',
 } as const;
 
 export class App extends Component<State> {
@@ -32,16 +36,17 @@ export class App extends Component<State> {
       rocketPosition: this.simulation.getRocketPosition(),
       rocketAngle: this.simulation.getRocketAngle(),
       rocketInOppositeDirection: this.simulation.isRocketInOppositeDirection(),
+      rocketSpeed: this.simulation.getRocketSpeed(),
       running: false,
     };
   }
 
   refreshData() {
     this.setState({
-      ...this.state,
       rocketPosition: this.simulation.getRocketPosition(),
       rocketAngle: this.simulation.getRocketAngle(),
       rocketInOppositeDirection: this.simulation.isRocketInOppositeDirection(),
+      rocketSpeed: this.simulation.getRocketSpeed(),
     });
   }
 
@@ -60,36 +65,56 @@ export class App extends Component<State> {
     window.addEventListener('resize', () => {
       this.simulation.render();
     });
-    this.elements.START_BUTTON.addEventListener('click', () => {
+    this.elements.startButton.addEventListener('click', () => {
       this.simulation.start();
       this.setState({
-        ...this.state,
         running: true,
       });
     });
-    this.elements.PAUSE_BUTTON.addEventListener('click', () => {
+    this.elements.pauseButton.addEventListener('click', () => {
       this.simulation.stop();
       this.setState({
-        ...this.state,
         running: false,
       });
       this.refreshData();
     });
     onMove({
-      target: this.elements.MOVER,
+      target: this.elements.mover,
       initialPosition: this.state.rocketPosition,
-      onDrag: (newPosition) => {
-        this.setState({
-          ...this.state,
-          rocketPosition: this.normalizeMovePosition(newPosition),
-        });
-        this.simulation.setRocketPosition(
-          this.normalizeMovePosition(newPosition)
-        );
-        this.simulation.render();
-        this.refreshData();
-      },
+      onDrag: this.handleRocketMove.bind(this),
     });
+    onMove({
+      target: this.elements.arrowHead,
+      onDrag: this.handleSpeedChange.bind(this),
+    });
+  }
+
+  handleRocketMove(newPosition: { x: number; y: number }) {
+    this.setState({
+      rocketPosition: this.normalizeMovePosition(newPosition),
+    });
+    this.simulation.setRocketPosition(this.normalizeMovePosition(newPosition));
+    this.simulation.render();
+    this.refreshData();
+  }
+
+  handleSpeedChange(newPosition: { x: number; y: number }) {
+    const distance = Math.sqrt(
+      (newPosition.x - this.state.rocketPosition.x) ** 2 +
+        (newPosition.y - this.state.rocketPosition.y) ** 2
+    );
+    let newSpeed =
+      (distance / CONFIG.MOVE_ARROW.MAX_HEIGHT) * CONFIG.MOVE_ARROW.MAX_SPEED;
+    if (newSpeed < CONFIG.MOVE_ARROW.MIN_SPEED) {
+      newSpeed = CONFIG.MOVE_ARROW.MIN_SPEED;
+    }
+    if (newSpeed > CONFIG.MOVE_ARROW.MAX_SPEED) {
+      newSpeed = CONFIG.MOVE_ARROW.MAX_SPEED;
+    }
+    this.setState({
+      rocketSpeed: newSpeed,
+    });
+    this.simulation.setRocketSpeed(newSpeed);
   }
 
   normalizeMovePosition(position: { x: number; y: number }) {
@@ -104,11 +129,11 @@ export class App extends Component<State> {
 
   render() {
     this.effect(() => {
-      this.setStyles(this.elements.ARROW, {
+      this.setStyles(this.elements.arrow, {
         left: this.state.rocketPosition.x,
         top: this.state.rocketPosition.y,
       });
-      this.setStyles(this.elements.MOVER, {
+      this.setStyles(this.elements.mover, {
         left: this.state.rocketPosition.x,
         top: this.state.rocketPosition.y,
         width: CONFIG.ROCKET.WIDTH,
@@ -118,19 +143,22 @@ export class App extends Component<State> {
 
     this.effect(() => {
       if (this.state.running) {
-        this.elements.CONTAINER.classList.add('running');
+        this.elements.container.classList.add('running');
       } else {
-        this.elements.CONTAINER.classList.remove('running');
+        this.elements.container.classList.remove('running');
       }
     }, ['running']);
 
     this.effect(() => {
-      this.setStyles(this.elements.ARROW, {
+      this.setStyles(this.elements.arrow, {
+        height:
+          (CONFIG.MOVE_ARROW.MAX_HEIGHT * this.state.rocketSpeed) /
+          CONFIG.MOVE_ARROW.MAX_SPEED,
         transform: `translateY(-100%) rotate(${denormalizeAngle(
           this.state.rocketAngle,
           this.state.rocketInOppositeDirection
         )}deg)`,
       });
-    }, ['rocketAngle', 'rocketInOppositeDirection']);
+    }, ['rocketAngle', 'rocketInOppositeDirection', 'rocketSpeed']);
   }
 }

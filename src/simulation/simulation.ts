@@ -105,4 +105,12 @@ export class Simulation {
   isRocketInOppositeDirection(): boolean {
     return this.rocket.isOppositeDirection();
   }
+
+  getRocketSpeed(): number {
+    return this.rocket.getSpeed();
+  }
+
+  setRocketSpeed(speed: number) {
+    return this.rocket.setSpeed(speed);
+  }
 }

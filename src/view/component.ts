@@ -4,9 +4,9 @@ export class Component<S extends Record<string, any>> {
   // @ts-ignore
   public state;
 
-  setState(newState: S) {
+  setState(newState: Partial<S>) {
     this.prevState = this.state;
-    this.state = newState;
+    this.state = { ...this.state, ...newState };
     this.render();
   }
 
