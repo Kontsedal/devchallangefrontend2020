@@ -2,6 +2,7 @@ import { GameObject } from '../interfaces/gameObject';
 import skyImageSrc from '../../assets/sky.jpg';
 import { RenderContext } from '../core/renderContext';
 import { AssetsManager } from '../core/assets';
+import { Camera } from './camera';
 
 export class Sky implements GameObject {
   x: number = 0;
@@ -20,14 +21,19 @@ export class Sky implements GameObject {
 
   public collides = false;
 
+  private camera: Camera;
+
   constructor({
     renderContext,
     assetsManager,
+    camera,
   }: {
     renderContext: RenderContext;
     assetsManager: AssetsManager;
+    camera: Camera;
   }) {
     this.renderContext = renderContext;
+    this.camera = camera;
     this.img = assetsManager.register(skyImageSrc);
     this.calculateSize();
   }
@@ -36,9 +42,9 @@ export class Sky implements GameObject {
     const context = this.renderContext.getContext();
     context.save();
     context.translate(
-      this.renderContext.getCurrentX(-this.renderContext.getWidth() * 25),
-      -this.renderContext.getCurrentY(
-        -this.renderContext.getHeight() + 2 * this.renderContext.offsetY
+      this.camera.getCurrentX(-this.renderContext.getWidth() * 25),
+      -this.camera.getCurrentY(
+        -this.renderContext.getHeight() + 2 * this.camera.y
       )
     );
     context.fillStyle = context.createPattern(

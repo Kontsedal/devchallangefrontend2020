@@ -2,12 +2,8 @@ import { RenderContext } from '../core/renderContext';
 import { GameObject } from '../interfaces/gameObject';
 import { CONFIG } from '../../config';
 
-type Options = {
-  target: GameObject;
-  renderContext: RenderContext;
-};
 export class Camera implements GameObject {
-  private readonly target: GameObject;
+  private target: GameObject | undefined;
 
   private readonly renderContext: RenderContext;
 
@@ -27,12 +23,18 @@ export class Camera implements GameObject {
 
   public collides = false;
 
-  constructor({ target, renderContext }: Options) {
-    this.target = target;
+  constructor({ renderContext }: { renderContext: RenderContext }) {
     this.renderContext = renderContext;
   }
 
+  setTarget(target: GameObject) {
+    this.target = target;
+  }
+
   update() {
+    if (!this.target) {
+      return;
+    }
     if (
       this.target.x >=
       this.renderContext.getWidth() -
@@ -75,8 +77,14 @@ export class Camera implements GameObject {
     } else {
       this.y = this.initialY;
     }
-    this.renderContext.setOffsetX(this.x);
-    this.renderContext.setOffsetY(this.y);
+  }
+
+  getCurrentY(originalY: number): number {
+    return this.renderContext.getHeight() - originalY + this.y;
+  }
+
+  getCurrentX(originalX: number): number {
+    return originalX + this.x;
   }
 
   render(): void {}

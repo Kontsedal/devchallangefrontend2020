@@ -2,6 +2,7 @@ import { GameObject } from '../interfaces/gameObject';
 import groundImageSrc from '../../assets/ground.png';
 import { RenderContext } from '../core/renderContext';
 import { AssetsManager } from '../core/assets';
+import { Camera } from './camera';
 
 export class Ground implements GameObject {
   x: number = -100;
@@ -20,14 +21,19 @@ export class Ground implements GameObject {
 
   public collides = false;
 
+  private camera: any;
+
   constructor({
     renderContext,
     assetsManager,
+    camera,
   }: {
     renderContext: RenderContext;
     assetsManager: AssetsManager;
+    camera: Camera;
   }) {
     this.renderContext = renderContext;
+    this.camera = camera;
     this.img = assetsManager.register(groundImageSrc);
     this.calculateSize();
   }
@@ -35,10 +41,7 @@ export class Ground implements GameObject {
   render() {
     const context = this.renderContext.getContext();
     context.save();
-    context.translate(
-      this.renderContext.getCurrentX(0),
-      this.renderContext.getCurrentY(0)
-    );
+    context.translate(this.camera.getCurrentX(0), this.camera.getCurrentY(0));
     context.fillStyle = context.createPattern(
       this.img,
       'repeat'
@@ -52,7 +55,6 @@ export class Ground implements GameObject {
   }
 
   calculateSize() {
-    this.width =
-      this.renderContext.getWidth() - this.renderContext.offsetX + 100;
+    this.width = this.renderContext.getWidth() - this.camera.x + 100;
   }
 }

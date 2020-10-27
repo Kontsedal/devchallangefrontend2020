@@ -24,18 +24,21 @@ export class Simulation {
   constructor() {
     this.renderContext = new RenderContext(CONFIG.CANVAS_SELECTOR);
     this.renderLoop = new RenderLoop({ renderContext: this.renderContext });
+
+    this.camera = new Camera({
+      renderContext: this.renderContext,
+    });
     this.rocket = new Rocket({
       renderContext: this.renderContext,
       assetsManager: this.assetsManager,
+      camera: this.camera,
     });
-    this.camera = new Camera({
-      target: this.rocket,
-      renderContext: this.renderContext,
-    });
+    this.camera.setTarget(this.rocket);
     this.renderLoop.addGameObject(
       new Sky({
         renderContext: this.renderContext,
         assetsManager: this.assetsManager,
+        camera: this.camera,
       })
     );
     repeat(CONFIG.WALLS.REPEAT_TIMES, (index) => {
@@ -45,6 +48,7 @@ export class Simulation {
           x: CONFIG.WALLS.OFFSET_X + CONFIG.WALLS.DISTANCE * index,
           height: CONFIG.WALLS.HEIGHT,
           width: CONFIG.WALLS.WIDTH,
+          camera: this.camera,
         })
       );
     });
@@ -52,6 +56,7 @@ export class Simulation {
       new Ground({
         renderContext: this.renderContext,
         assetsManager: this.assetsManager,
+        camera: this.camera,
       })
     );
 
@@ -81,8 +86,8 @@ export class Simulation {
 
   getRocketPosition(): { x: number; y: number } {
     return {
-      x: this.renderContext.getCurrentX(this.rocket.x),
-      y: this.renderContext.getCurrentY(this.rocket.y),
+      x: this.camera.getCurrentX(this.rocket.x),
+      y: this.camera.getCurrentY(this.rocket.y),
     };
   }
 

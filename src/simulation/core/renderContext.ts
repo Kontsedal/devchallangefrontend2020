@@ -7,11 +7,6 @@ export class RenderContext {
 
   private canvasHeight: number;
 
-  // todo add getters
-  public offsetX: number = 0;
-
-  public offsetY: number = 0;
-
   constructor(selector: string) {
     this.element = document.querySelector(selector) as HTMLCanvasElement;
     this.context = this.element.getContext('2d') as CanvasRenderingContext2D;
@@ -32,14 +27,6 @@ export class RenderContext {
     return this.context;
   }
 
-  getCurrentY(originalY: number): number {
-    return this.canvasHeight - originalY + this.offsetY;
-  }
-
-  getCurrentX(originalX: number): number {
-    return originalX + this.offsetX;
-  }
-
   clear() {
     this.getContext().clearRect(0, 0, this.canvasWidth, this.canvasHeight);
   }
@@ -50,13 +37,5 @@ export class RenderContext {
 
   getHeight() {
     return this.canvasHeight;
-  }
-
-  setOffsetX(offset: number) {
-    this.offsetX = offset;
-  }
-
-  setOffsetY(offset: number) {
-    this.offsetY = offset;
   }
 }

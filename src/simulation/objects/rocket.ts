@@ -5,6 +5,7 @@ import rocketImageSrc from '../../assets/rocket.png';
 import { Collision, CollisionType } from '../core/collision';
 import { CONFIG } from '../../config';
 import { AssetsManager } from '../core/assets';
+import { Camera } from './camera';
 
 function denormalizeAngle(angle: number, isOpposite: boolean): number {
   return Math.abs(angle - (isOpposite ? 270 : 90));
@@ -40,14 +41,19 @@ export class Rocket implements GameObject {
 
   private oppositeDirection: boolean = false;
 
+  private camera: Camera;
+
   constructor({
     assetsManager,
     renderContext,
+    camera,
   }: {
     renderContext: RenderContext;
     assetsManager: AssetsManager;
+    camera: Camera;
   }) {
     this.renderContext = renderContext;
+    this.camera = camera;
     this.img = assetsManager.register(rocketImageSrc);
   }
 
@@ -118,8 +124,8 @@ export class Rocket implements GameObject {
     const canvasContext = this.renderContext.getContext();
     canvasContext.save();
     canvasContext.translate(
-      this.renderContext.getCurrentX(this.x),
-      this.renderContext.getCurrentY(this.y)
+      this.camera.getCurrentX(this.x),
+      this.camera.getCurrentY(this.y)
     );
     canvasContext.rotate(
       degreesToRadians(
@@ -127,8 +133,8 @@ export class Rocket implements GameObject {
       )
     );
     console.log({
-      x: this.renderContext.getCurrentX(this.x),
-      y: this.renderContext.getCurrentY(this.y),
+      x: this.camera.getCurrentX(this.x),
+      y: this.camera.getCurrentY(this.y),
       currentX: this.x,
       currentY: this.y,
     });

@@ -31,10 +31,8 @@ export class App extends Component<State> {
   async init() {
     this.attachEventListeners();
     await this.simulation.init();
-    this.simulation.update();
     this.simulation.render();
     this.render();
-    this.simulation.start();
   }
 
   attachEventListeners() {
