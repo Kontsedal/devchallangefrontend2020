@@ -8,28 +8,36 @@ type State = {
     x: number;
     y: number;
   };
+  running: boolean;
 };
+
+const SELECTORS = {
+  ARROW: '.js-arrow',
+  MOVER: '.js-mover',
+  START_BUTTON: '.js-start',
+  PAUSE_BUTTON: '.js-pause',
+  CONTAINER: '.js-root',
+} as const;
+
 export class App extends Component<State> {
-  private selectors = {
-    ARROW: '.js-arrow',
-    MOVER: '.js-mover',
-    START_BUTTON: '.js-start',
-  };
+  private elements: Record<keyof typeof SELECTORS | string, HTMLElement> = {};
 
   private simulation: Simulation;
-
-  private arrowElement: HTMLElement | undefined;
-
-  private moverElement: HTMLElement | undefined;
-
-  private startButtonElement: HTMLElement | undefined;
 
   constructor() {
     super();
     this.simulation = new Simulation();
     this.state = {
       rocketPosition: this.simulation.getRocketPosition(),
+      running: false,
     };
+  }
+
+  refreshData() {
+    this.setState({
+      ...this.state,
+      rocketPosition: this.simulation.getRocketPosition(),
+    });
   }
 
   async init() {
@@ -40,51 +48,77 @@ export class App extends Component<State> {
   }
 
   attachEventListeners() {
-    this.arrowElement = document.querySelector(
-      this.selectors.ARROW
-    ) as HTMLElement;
-
-    this.moverElement = document.querySelector(
-      this.selectors.MOVER
-    ) as HTMLElement;
-
-    this.startButtonElement = document.querySelector(
-      this.selectors.START_BUTTON
-    ) as HTMLElement;
+    Object.entries(SELECTORS).forEach(([name, selector]) => {
+      this.elements[name] = document.querySelector(selector) as HTMLElement;
+    });
 
     window.addEventListener('resize', () => {
       this.simulation.render();
     });
-
-    this.startButtonElement.addEventListener('click', () => {
+    this.elements.START_BUTTON.addEventListener('click', () => {
       this.simulation.start();
+      this.setState({
+        ...this.state,
+        running: true,
+      });
+    });
+    this.elements.PAUSE_BUTTON.addEventListener('click', () => {
+      this.simulation.stop();
+      this.setState({
+        ...this.state,
+        running: false,
+      });
+      this.refreshData();
     });
     onMove({
-      target: this.moverElement,
+      target: this.elements.MOVER,
       initialPosition: this.state.rocketPosition,
-      callback: (newPosition) => {
+      onDrag: (newPosition) => {
         this.setState({
           ...this.state,
-          rocketPosition: newPosition,
+          rocketPosition: this.normalizeMovePosition(newPosition),
         });
-        this.simulation.setRocketPosition(newPosition);
+      },
+      onDrop: (newPosition) => {
+        this.simulation.setRocketPosition(
+          this.normalizeMovePosition(newPosition)
+        );
         this.simulation.render();
+        this.refreshData();
       },
     });
   }
 
+  normalizeMovePosition(position: { x: number; y: number }) {
+    let newX = position.x;
+    const newY = position.y;
+    const minX = CONFIG.ROCKET.WIDTH / 2 + CONFIG.ROCKET.INITIAL_X;
+    if (position.x < minX) {
+      newX = minX;
+    }
+    return { x: newX, y: newY };
+  }
+
   render() {
     this.effect(() => {
-      this.setStyles(this.arrowElement, {
+      this.setStyles(this.elements.ARROW, {
         left: this.state.rocketPosition.x,
         top: this.state.rocketPosition.y,
       });
-      this.setStyles(this.moverElement, {
+      this.setStyles(this.elements.MOVER, {
         left: this.state.rocketPosition.x,
         top: this.state.rocketPosition.y,
         width: CONFIG.ROCKET.WIDTH,
         height: CONFIG.ROCKET.HEIGHT,
       });
     }, ['rocketPosition']);
+
+    this.effect(() => {
+      if (this.state.running) {
+        this.elements.CONTAINER.classList.add('running');
+      } else {
+        this.elements.CONTAINER.classList.remove('running');
+      }
+    }, ['running']);
   }
 }

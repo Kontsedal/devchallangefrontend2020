@@ -39,6 +39,7 @@ export class Ground implements GameObject {
   }
 
   render() {
+    this.calculateSize();
     const context = this.renderContext.getContext();
     context.save();
     context.translate(this.camera.getCurrentX(0), this.camera.getCurrentY(0));
@@ -50,9 +51,7 @@ export class Ground implements GameObject {
     context.restore();
   }
 
-  update() {
-    this.calculateSize();
-  }
+  update() {}
 
   calculateSize() {
     this.width = this.renderContext.getWidth() - this.camera.x + 100;

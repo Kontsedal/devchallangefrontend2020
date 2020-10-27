@@ -39,6 +39,7 @@ export class Sky implements GameObject {
   }
 
   render() {
+    this.calculateSize();
     const context = this.renderContext.getContext();
     context.save();
     context.translate(
@@ -55,9 +56,7 @@ export class Sky implements GameObject {
     context.restore();
   }
 
-  update() {
-    this.calculateSize();
-  }
+  update() {}
 
   calculateSize() {
     this.width = this.renderContext.getWidth() * 50;

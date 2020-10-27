@@ -118,6 +118,8 @@ export class Rocket implements GameObject {
     this.initialY = position.y;
     this.x = position.x;
     this.y = position.y;
+    this.timeSinceStart = 0;
+    this.initialAngle = this.currentAngle;
   }
 
   render() {

@@ -1,10 +1,12 @@
 type Position = { x: number; y: number };
 export const onMove = ({
   target,
-  callback,
+  onDrag,
+  onDrop,
 }: {
   target: HTMLElement | void;
-  callback: (newPosition: Position) => void;
+  onDrag: (newPosition: Position) => void;
+  onDrop: (newPosition: Position) => void;
   initialPosition: Position;
 }) => {
   if (!target) {
@@ -18,12 +20,13 @@ export const onMove = ({
     const moveHandler = (moveEvent: MouseEvent) => {
       xDiff = moveEvent.clientX - initialX;
       yDiff = moveEvent.clientY - initialY;
-      callback({ x: initialX + xDiff, y: initialY + yDiff });
+      onDrag({ x: initialX + xDiff, y: initialY + yDiff });
     };
     document.addEventListener('mousemove', moveHandler);
     document.addEventListener('mouseup', function handleUp() {
       document.removeEventListener('mouseup', handleUp);
       document.removeEventListener('mousemove', moveHandler);
+      onDrop({ x: initialX + xDiff, y: initialY + yDiff });
     });
   });
 };

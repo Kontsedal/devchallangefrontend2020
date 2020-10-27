@@ -10,6 +10,19 @@ html, body {
   color: black;
   overflow: hidden;
   position: relative;
+
+  &.running {
+    .arrow, .mover, .startBtn {
+      display: none;
+    }
+    .pauseBtn {
+      display: block;
+    }
+  }
+
+  .pauseBtn {
+    display: none;
+  }
 }
 
 .canvas {
@@ -39,7 +52,12 @@ html, body {
   opacity: 0.3;
 }
 
-.start {
+.startBtn {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.pauseBtn {
   position: absolute;
   left: 0;
   top: 0;
