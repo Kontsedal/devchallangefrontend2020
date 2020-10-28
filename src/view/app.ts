@@ -2,9 +2,7 @@ import { Component } from './component';
 import { Simulation } from '../simulation/simulation';
 import { CONFIG } from '../config';
 import { onMove } from '../simulation/utils/dom';
-import {
-  denormalizeAngle, getOnePointAngle,
-} from '../simulation/utils/angle';
+import { denormalizeAngle, getOnePointAngle } from '../simulation/utils/math';
 
 type State = {
   rocketPosition: {
@@ -82,21 +80,11 @@ export class App extends Component<State> {
       });
       this.refreshData();
     });
-    onMove({
-      target: this.elements.mover,
-      initialPosition: this.state.rocketPosition,
-      onDrag: this.handleRocketMove.bind(this),
-    });
-    onMove({
-      target: this.elements.arrowHead,
-      onDrag: this.handleSpeedChange.bind(this),
-    });
+    onMove(this.elements.mover, this.handleRocketMove.bind(this));
+    onMove(this.elements.arrowHead, this.handleSpeedChange.bind(this));
   }
 
   handleRocketMove(newPosition: { x: number; y: number }) {
-    this.setState({
-      rocketPosition: this.normalizeMovePosition(newPosition),
-    });
     this.simulation.setRocketPosition(this.normalizeMovePosition(newPosition));
     this.simulation.render();
     this.refreshData();
@@ -120,7 +108,7 @@ export class App extends Component<State> {
     if (newSpeed > CONFIG.MOVE_ARROW.MAX_SPEED) {
       newSpeed = CONFIG.MOVE_ARROW.MAX_SPEED;
     }
-    const newAngle = getOnePointAngle(this.state.rocketPosition, newPosition)
+    const newAngle = getOnePointAngle(this.state.rocketPosition, newPosition);
     this.setState({
       rocketSpeed: newSpeed,
       rocketAngle: newAngle,
@@ -128,7 +116,7 @@ export class App extends Component<State> {
     });
     this.simulation.setRocketSpeed(newSpeed);
     this.simulation.setRocketAngle(newAngle);
-    this.simulation.render()
+    this.simulation.render();
   }
 
   normalizeMovePosition(position: { x: number; y: number }) {
@@ -166,12 +154,20 @@ export class App extends Component<State> {
     this.effect(() => {
       this.setStyles(this.elements.arrow, {
         height:
-          CONFIG.MOVE_ARROW.MIN_HEIGHT + (((CONFIG.MOVE_ARROW.MAX_HEIGHT - CONFIG.MOVE_ARROW.MIN_HEIGHT) / CONFIG.MOVE_ARROW.MAX_SPEED) * this.state.rocketSpeed)
-          ,
+          CONFIG.MOVE_ARROW.MIN_HEIGHT +
+          ((CONFIG.MOVE_ARROW.MAX_HEIGHT - CONFIG.MOVE_ARROW.MIN_HEIGHT) /
+            CONFIG.MOVE_ARROW.MAX_SPEED) *
+            this.state.rocketSpeed,
         transform: `translateY(-100%) rotate(${denormalizeAngle(
-          this.state.rocketAngle, this.state.rocketInitialAngle
+          this.state.rocketAngle,
+          this.state.rocketInitialAngle
         )}deg)`,
       });
-    }, ['rocketAngle', 'rocketInOppositeDirection', 'rocketSpeed', 'rocketInitialAngle']);
+    }, [
+      'rocketAngle',
+      'rocketInOppositeDirection',
+      'rocketSpeed',
+      'rocketInitialAngle',
+    ]);
   }
 }

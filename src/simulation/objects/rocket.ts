@@ -1,20 +1,20 @@
 import { GameObject } from '../interfaces/gameObject';
 import { RenderContext } from '../core/renderContext';
-import { cos, degreesToRadians, radiansToDegrees, sin } from '../core/math';
+import {
+  atan,
+  cos,
+  degreesToRadians,
+  denormalizeAngle,
+  normalizeAngle,
+  radiansToDegrees,
+  sin,
+} from '../utils/math';
 import rocketImageSrc from '../../assets/rocket.png';
 import { Collision, CollisionType } from '../core/collision';
 import { CONFIG } from '../../config';
 import { AssetsManager } from '../core/assets';
 import { Camera } from './camera';
-import { denormalizeAngle } from '../utils/angle';
 
-function normalizeAngle(angle:number) {
-  let result = angle;
-  if(angle < 0) {
-    result = 360 + angle
-  }
-  return result % 360;
-}
 export class Rocket implements GameObject {
   public x: number = CONFIG.ROCKET.INITIAL_X;
 
@@ -47,10 +47,10 @@ export class Rocket implements GameObject {
   private camera: Camera;
 
   constructor({
-                assetsManager,
-                renderContext,
-                camera,
-              }: {
+    assetsManager,
+    renderContext,
+    camera,
+  }: {
     renderContext: RenderContext;
     assetsManager: AssetsManager;
     camera: Camera;
@@ -61,13 +61,14 @@ export class Rocket implements GameObject {
   }
 
   update(collisions: Collision[]) {
-    const isOppositeDirection = this.initialAngle > 90 && this.initialAngle < 270;
+    const isOppositeDirection =
+      this.initialAngle > 90 && this.initialAngle < 270;
     // Calculating angle of the object force
     this.currentAngle = radiansToDegrees(
-      Math.atan(
+      atan(
         (this.speed * sin(this.initialAngle) -
           CONFIG.GRAVITY_FORCE * this.timeSinceStart) /
-        (this.speed * cos(this.initialAngle))
+          (this.speed * cos(this.initialAngle))
       )
     );
     collisions.forEach((collision) => {
@@ -75,9 +76,9 @@ export class Rocket implements GameObject {
         this.y += collision.diffY;
         this.initialX = this.x;
         this.initialY = this.y;
-        this.initialAngle = normalizeAngle(!isOppositeDirection
-          ? -this.currentAngle
-          : 180 - this.currentAngle);
+        this.initialAngle = normalizeAngle(
+          !isOppositeDirection ? -this.currentAngle : 180 - this.currentAngle
+        );
       }
       if (collision.type === CollisionType.RIGHT) {
         this.initialX = this.x - collision.diffX;
@@ -95,7 +96,6 @@ export class Rocket implements GameObject {
       this.timeSinceStart = 0;
       this.speed *= CONFIG.ROCKET.COLLISION_SPEED_MULTIPLIER;
     }
-    console.log({c: this.currentAngle, op: isOppositeDirection, i:this.initialAngle})
     this.x =
       this.initialX + this.speed * this.timeSinceStart * cos(this.initialAngle);
     this.y =
@@ -131,9 +131,7 @@ export class Rocket implements GameObject {
       this.camera.getCurrentY(this.y)
     );
     canvasContext.rotate(
-      degreesToRadians(
-        denormalizeAngle(this.currentAngle, this.initialAngle )
-      )
+      degreesToRadians(denormalizeAngle(this.currentAngle, this.initialAngle))
     );
     canvasContext.drawImage(
       this.img,
@@ -153,8 +151,7 @@ export class Rocket implements GameObject {
     return this.initialAngle;
   }
 
-  isOppositeDirection() {
-  }
+  isOppositeDirection() {}
 
   getSpeed() {
     return this.speed;
@@ -175,5 +172,4 @@ export class Rocket implements GameObject {
     this.initialAngle = angle;
     this.currentAngle = angle;
   }
-
 }

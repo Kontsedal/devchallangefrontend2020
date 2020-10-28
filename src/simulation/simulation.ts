@@ -6,9 +6,9 @@ import { Camera } from './objects/camera';
 import { Ground } from './objects/ground';
 import { Wall } from './objects/wall';
 import { CONFIG } from '../config';
-import { repeat } from './utils/repeat';
 import { Sky } from './objects/sky';
 import { AssetsManager } from './core/assets';
+import { repeat } from './utils/function';
 
 export class Simulation {
   private renderLoop: RenderLoop;
@@ -41,13 +41,15 @@ export class Simulation {
         camera: this.camera,
       })
     );
-    this.renderLoop.addGameObject( new Wall({
-      renderContext: this.renderContext,
-      x: -100 - CONFIG.CAMERA.INITIAL_X,
-      height: 5000,
-      width: 100,
-      camera: this.camera,
-    }))
+    this.renderLoop.addGameObject(
+      new Wall({
+        renderContext: this.renderContext,
+        x: -100 - CONFIG.CAMERA.INITIAL_X,
+        height: 5000,
+        width: 100,
+        camera: this.camera,
+      })
+    );
     repeat(CONFIG.WALLS.REPEAT_TIMES, (index) => {
       this.renderLoop.addGameObject(
         new Wall({
@@ -99,6 +101,15 @@ export class Simulation {
   }
 
   setRocketPosition(position: { x: number; y: number }) {
+    console.log(
+      JSON.stringify({
+        position,
+        re: {
+          x: this.camera.normalizeX(position.x),
+          y: this.camera.normalizeY(position.y),
+        },
+      })
+    );
     this.rocket.setPosition({
       x: this.camera.normalizeX(position.x),
       y: this.camera.normalizeY(position.y),
@@ -122,6 +133,6 @@ export class Simulation {
   }
 
   setRocketAngle(angle: number) {
-     this.rocket.setAngle(angle);
+    this.rocket.setAngle(angle);
   }
 }
