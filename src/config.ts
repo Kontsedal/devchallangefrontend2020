@@ -15,7 +15,7 @@ export const CONFIG = {
   CAMERA: {
     INITIAL_X: 20,
     INITIAL_Y: -35,
-    MIN_TARGET_OFFSET_X: 20,
+    MIN_TARGET_OFFSET_X: 40,
     MAX_TARGET_OFFSET_X_PERCENT: 0.3,
     MAX_TARGET_OFFSET_Y: 100,
   },
@@ -29,9 +29,10 @@ export const CONFIG = {
   GRAVITY_FORCE: 9.8,
   MAX_COLLISION_DEPTH: 20,
   MOVE_ARROW: {
-    MAX_HEIGHT: 400,
+    MAX_HEIGHT: 300,
+    MIN_HEIGHT: 50,
     MIN_WIDTH: 50,
     MAX_SPEED: 300,
-    MIN_SPEED: 50,
+    MIN_SPEED: 0,
   },
 };

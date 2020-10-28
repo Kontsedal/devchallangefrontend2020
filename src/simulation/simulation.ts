@@ -41,6 +41,13 @@ export class Simulation {
         camera: this.camera,
       })
     );
+    this.renderLoop.addGameObject( new Wall({
+      renderContext: this.renderContext,
+      x: -100 - CONFIG.CAMERA.INITIAL_X,
+      height: 5000,
+      width: 100,
+      camera: this.camera,
+    }))
     repeat(CONFIG.WALLS.REPEAT_TIMES, (index) => {
       this.renderLoop.addGameObject(
         new Wall({

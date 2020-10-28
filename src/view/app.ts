@@ -166,8 +166,8 @@ export class App extends Component<State> {
     this.effect(() => {
       this.setStyles(this.elements.arrow, {
         height:
-          (CONFIG.MOVE_ARROW.MAX_HEIGHT * this.state.rocketSpeed) /
-          CONFIG.MOVE_ARROW.MAX_SPEED,
+          CONFIG.MOVE_ARROW.MIN_HEIGHT + (((CONFIG.MOVE_ARROW.MAX_HEIGHT - CONFIG.MOVE_ARROW.MIN_HEIGHT) / CONFIG.MOVE_ARROW.MAX_SPEED) * this.state.rocketSpeed)
+          ,
         transform: `translateY(-100%) rotate(${denormalizeAngle(
           this.state.rocketAngle, this.state.rocketInitialAngle
         )}deg)`,
