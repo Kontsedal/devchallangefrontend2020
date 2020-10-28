@@ -1,5 +1,5 @@
 import { GameObject } from '../interfaces/gameObject';
-import skyImageSrc from '../../assets/sky.png';
+import skyImageSrc from '../../assets/sky.jpg';
 import { RenderContext } from '../core/renderContext';
 import { AssetsManager } from '../core/assets';
 import { Camera } from './camera';
@@ -41,25 +41,27 @@ export class Sky implements GameObject {
   render() {
     this.calculateSize();
     const context = this.renderContext.getContext();
+    console.log({
+      cx: this.camera.getCurrentX(0),
+      cy: this.camera.getCurrentY(0),
+    });
     context.save();
     context.translate(
-      this.camera.getCurrentX(-this.renderContext.getWidth() * 25),
-      -this.camera.getCurrentY(
-        -this.renderContext.getHeight() + 2 * this.camera.y
-      )
+      this.camera.getCurrentX(0),
+      -this.height / 2 + this.camera.y
     );
     context.fillStyle = context.createPattern(
       this.img,
       'repeat'
     ) as CanvasPattern;
-    context.fillRect(this.x, this.y, this.width, this.height);
+    context.fillRect(this.x - this.width / 2, this.y, this.width, this.height);
     context.restore();
   }
 
   update() {}
 
   calculateSize() {
-    this.width = this.renderContext.getWidth() * 50;
-    this.height = this.renderContext.getHeight() * 50;
+    this.width = 20000;
+    this.height = 20000;
   }
 }
