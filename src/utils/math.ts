@@ -1,4 +1,4 @@
-import { Position } from '../interfaces/position';
+import { Position } from '../simulation/interfaces/position';
 import { pipe } from './function';
 
 function memo(

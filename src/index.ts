@@ -1,12 +1,10 @@
 import { App } from './view/app';
 
-function main() {
+async function main() {
   const app = new App();
-  app.init();
+  await app.init();
 }
 
-try {
-  main();
-} catch (error) {
+main().catch(() => {
   console.error('Failed to bootstrap');
-}
+});

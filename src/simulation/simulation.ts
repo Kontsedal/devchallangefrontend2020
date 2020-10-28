@@ -8,7 +8,7 @@ import { Wall } from './objects/wall';
 import { CONFIG } from '../config';
 import { Sky } from './objects/sky';
 import { AssetsManager } from './core/assets';
-import { repeat } from './utils/function';
+import { repeat } from '../utils/function';
 
 export class Simulation {
   private renderLoop: RenderLoop;
@@ -101,15 +101,6 @@ export class Simulation {
   }
 
   setRocketPosition(position: { x: number; y: number }) {
-    console.log(
-      JSON.stringify({
-        position,
-        re: {
-          x: this.camera.normalizeX(position.x),
-          y: this.camera.normalizeY(position.y),
-        },
-      })
-    );
     this.rocket.setPosition({
       x: this.camera.normalizeX(position.x),
       y: this.camera.normalizeY(position.y),

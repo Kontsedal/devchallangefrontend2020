@@ -8,7 +8,7 @@ import {
   normalizeAngle,
   radiansToDegrees,
   sin,
-} from '../utils/math';
+} from '../../utils/math';
 import rocketImageSrc from '../../assets/rocket.png';
 import { Collision, CollisionType } from '../core/collision';
 import { CONFIG } from '../../config';

@@ -1,8 +1,8 @@
 import { Component } from './component';
 import { Simulation } from '../simulation/simulation';
 import { CONFIG } from '../config';
-import { onMove } from '../simulation/utils/dom';
-import { denormalizeAngle, getOnePointAngle } from '../simulation/utils/math';
+import { EnhancedDomElement, enhanceDom } from '../utils/dom';
+import { denormalizeAngle, getOnePointAngle } from '../utils/math';
 
 type State = {
   rocketPosition: {
@@ -26,7 +26,10 @@ const SELECTORS = {
 } as const;
 
 export class App extends Component<State> {
-  private elements: Record<keyof typeof SELECTORS | string, HTMLElement> = {};
+  private elements: Record<
+    keyof typeof SELECTORS | string,
+    EnhancedDomElement
+  > = {};
 
   private simulation: Simulation;
 
@@ -60,31 +63,36 @@ export class App extends Component<State> {
 
   attachEventListeners() {
     Object.entries(SELECTORS).forEach(([name, selector]) => {
-      this.elements[name] = document.querySelector(selector) as HTMLElement;
+      this.elements[name] = enhanceDom(selector);
     });
 
     window.addEventListener('resize', () => {
       this.simulation.render();
       this.refreshData();
     });
-    this.elements.startButton.addEventListener('click', () => {
+    this.elements.startButton.on('click', () => {
       this.simulation.start();
       this.setState({
         running: true,
       });
     });
-    this.elements.pauseButton.addEventListener('click', () => {
+    this.elements.pauseButton.on('click', () => {
       this.simulation.stop();
       this.setState({
         running: false,
       });
       this.refreshData();
     });
-    onMove(this.elements.mover, this.handleRocketMove.bind(this));
-    onMove(this.elements.arrowHead, this.handleSpeedChange.bind(this));
+    this.elements.mover.onMove(this.handleRocketMove.bind(this));
+    this.elements.arrowHead.onMove(this.handleSpeedChange.bind(this));
   }
 
-  handleRocketMove(newPosition: { x: number; y: number }) {
+  handleRocketMove(newPosition: {
+    x: number;
+    y: number;
+    xDiff: number;
+    yDiff: number;
+  }) {
     this.simulation.setRocketPosition(this.normalizeMovePosition(newPosition));
     this.simulation.render();
     this.refreshData();
@@ -131,11 +139,11 @@ export class App extends Component<State> {
 
   render() {
     this.effect(() => {
-      this.setStyles(this.elements.arrow, {
+      this.elements.arrow.css({
         left: this.state.rocketPosition.x,
         top: this.state.rocketPosition.y,
       });
-      this.setStyles(this.elements.mover, {
+      this.elements.mover.css({
         left: this.state.rocketPosition.x,
         top: this.state.rocketPosition.y,
         width: CONFIG.ROCKET.WIDTH,
@@ -144,15 +152,13 @@ export class App extends Component<State> {
     }, ['rocketPosition']);
 
     this.effect(() => {
-      if (this.state.running) {
-        this.elements.container.classList.add('running');
-      } else {
-        this.elements.container.classList.remove('running');
-      }
+      this.elements.container.classNames({
+        running: this.state.running,
+      });
     }, ['running']);
 
     this.effect(() => {
-      this.setStyles(this.elements.arrow, {
+      this.elements.arrow.css({
         height:
           CONFIG.MOVE_ARROW.MIN_HEIGHT +
           ((CONFIG.MOVE_ARROW.MAX_HEIGHT - CONFIG.MOVE_ARROW.MIN_HEIGHT) /
