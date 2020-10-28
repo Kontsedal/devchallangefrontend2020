@@ -2,7 +2,9 @@ import { Component } from './component';
 import { Simulation } from '../simulation/simulation';
 import { CONFIG } from '../config';
 import { onMove } from '../simulation/utils/dom';
-import { denormalizeAngle } from '../simulation/utils/angle';
+import {
+  denormalizeAngle, getOnePointAngle,
+} from '../simulation/utils/angle';
 
 type State = {
   rocketPosition: {
@@ -48,6 +50,7 @@ export class App extends Component<State> {
       rocketInOppositeDirection: this.simulation.isRocketInOppositeDirection(),
       rocketSpeed: this.simulation.getRocketSpeed(),
     });
+    console.log(this.state.rocketAngle);
   }
 
   async init() {
@@ -98,7 +101,12 @@ export class App extends Component<State> {
     this.refreshData();
   }
 
-  handleSpeedChange(newPosition: { x: number; y: number }) {
+  handleSpeedChange(newPosition: {
+    x: number;
+    y: number;
+    xDiff: number;
+    yDiff: number;
+  }) {
     const distance = Math.sqrt(
       (newPosition.x - this.state.rocketPosition.x) ** 2 +
         (newPosition.y - this.state.rocketPosition.y) ** 2
@@ -111,6 +119,9 @@ export class App extends Component<State> {
     if (newSpeed > CONFIG.MOVE_ARROW.MAX_SPEED) {
       newSpeed = CONFIG.MOVE_ARROW.MAX_SPEED;
     }
+    console.log(
+      getOnePointAngle(this.state.rocketPosition, newPosition)
+    );
     this.setState({
       rocketSpeed: newSpeed,
     });

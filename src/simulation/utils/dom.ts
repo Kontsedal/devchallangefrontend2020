@@ -1,5 +1,6 @@
-type Position = { x: number; y: number };
-type NewPosition = { x: number; y: number; xDiff: number; yDiff: number };
+import { Position } from '../interfaces/position';
+
+type NewPosition = Position & { xDiff: number; yDiff: number };
 export const onMove = ({
   target,
   onDrag,
