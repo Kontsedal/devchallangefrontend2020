@@ -1,5 +1,5 @@
 import { GameObject } from '../interfaces/gameObject';
-import skyImageSrc from '../../assets/sky.jpg';
+import skyImageSrc from '../../assets/sky.png';
 import { RenderContext } from '../core/renderContext';
 import { AssetsManager } from '../core/assets';
 import { Camera } from './camera';
