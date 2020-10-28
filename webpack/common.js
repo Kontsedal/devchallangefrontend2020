@@ -12,10 +12,9 @@ module.exports = {
   module: {
     rules: [
       loaders.processTypescriptFiles,
-      loaders.processSassFiles,
       loaders.processImages,
       loaders.lintTypescript,
     ],
   },
-  plugins: [plugins.processIndexHtml, plugins.extractCssFromBundle],
+  plugins: [plugins.processIndexHtml],
 };

@@ -6,7 +6,7 @@ const processTypescriptFiles = {
   exclude: /node_modules/,
 };
 
-const processSassFiles = {
+const processSassFilesInMemory = {
   test: /scss$/,
   use: [
     'style-loader',
@@ -18,6 +18,11 @@ const processSassFiles = {
     },
     'sass-loader',
   ],
+};
+
+const processSassFilesInFile = {
+  test: /scss$/,
+  use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
 };
 
 const processImages = {
@@ -41,7 +46,8 @@ const lintTypescript = {
 
 module.exports = {
   processTypescriptFiles,
-  processSassFiles,
+  processSassFilesInMemory,
+  processSassFilesInFile,
   processImages,
   lintTypescript,
 };
