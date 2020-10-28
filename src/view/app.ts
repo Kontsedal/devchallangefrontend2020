@@ -13,6 +13,7 @@ type State = {
   };
   running: boolean;
   rocketAngle: number;
+  rocketInitialAngle: number;
   rocketSpeed: number;
   rocketInOppositeDirection: boolean;
 };
@@ -37,7 +38,7 @@ export class App extends Component<State> {
     this.state = {
       rocketPosition: this.simulation.getRocketPosition(),
       rocketAngle: this.simulation.getRocketAngle(),
-      rocketInOppositeDirection: this.simulation.isRocketInOppositeDirection(),
+      rocketInitialAngle: this.simulation.getRocketInitialAngle(),
       rocketSpeed: this.simulation.getRocketSpeed(),
       running: false,
     };
@@ -47,10 +48,9 @@ export class App extends Component<State> {
     this.setState({
       rocketPosition: this.simulation.getRocketPosition(),
       rocketAngle: this.simulation.getRocketAngle(),
-      rocketInOppositeDirection: this.simulation.isRocketInOppositeDirection(),
+      rocketInitialAngle: this.simulation.getRocketInitialAngle(),
       rocketSpeed: this.simulation.getRocketSpeed(),
     });
-    console.log(this.state.rocketAngle);
   }
 
   async init() {
@@ -67,6 +67,7 @@ export class App extends Component<State> {
 
     window.addEventListener('resize', () => {
       this.simulation.render();
+      this.refreshData();
     });
     this.elements.startButton.addEventListener('click', () => {
       this.simulation.start();
@@ -119,13 +120,15 @@ export class App extends Component<State> {
     if (newSpeed > CONFIG.MOVE_ARROW.MAX_SPEED) {
       newSpeed = CONFIG.MOVE_ARROW.MAX_SPEED;
     }
-    console.log(
-      getOnePointAngle(this.state.rocketPosition, newPosition)
-    );
+    const newAngle = getOnePointAngle(this.state.rocketPosition, newPosition)
     this.setState({
       rocketSpeed: newSpeed,
+      rocketAngle: newAngle,
+      rocketInitialAngle: newAngle,
     });
     this.simulation.setRocketSpeed(newSpeed);
+    this.simulation.setRocketAngle(newAngle);
+    this.simulation.render()
   }
 
   normalizeMovePosition(position: { x: number; y: number }) {
@@ -166,10 +169,9 @@ export class App extends Component<State> {
           (CONFIG.MOVE_ARROW.MAX_HEIGHT * this.state.rocketSpeed) /
           CONFIG.MOVE_ARROW.MAX_SPEED,
         transform: `translateY(-100%) rotate(${denormalizeAngle(
-          this.state.rocketAngle,
-          this.state.rocketInOppositeDirection
+          this.state.rocketAngle, this.state.rocketInitialAngle
         )}deg)`,
       });
-    }, ['rocketAngle', 'rocketInOppositeDirection', 'rocketSpeed']);
+    }, ['rocketAngle', 'rocketInOppositeDirection', 'rocketSpeed', 'rocketInitialAngle']);
   }
 }

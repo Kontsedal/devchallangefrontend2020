@@ -2,9 +2,16 @@ import { Position } from '../interfaces/position';
 
 export function denormalizeAngle(
   angle: number,
-  isOppositeDirection: boolean
+  initialAngle?: number
 ): number {
-  return Math.abs(angle - (isOppositeDirection ? 270 : 90));
+  let result = 90 - angle;
+  if (initialAngle && initialAngle > 90 && initialAngle < 270 && initialAngle !== angle) {
+    result += 180;
+  }
+  if (result < 0) {
+    result = 360 + result;
+  }
+  return result % 360;
 }
 
 export function getThreePointsAngle(

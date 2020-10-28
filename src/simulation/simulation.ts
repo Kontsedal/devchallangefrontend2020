@@ -99,11 +99,11 @@ export class Simulation {
   }
 
   getRocketAngle(): number {
-    return this.rocket.getAngle();
+    return this.rocket.getCurrentAngle();
   }
 
-  isRocketInOppositeDirection(): boolean {
-    return this.rocket.isOppositeDirection();
+  getRocketInitialAngle() {
+    return this.rocket.getInitialAngle();
   }
 
   getRocketSpeed(): number {
@@ -112,5 +112,9 @@ export class Simulation {
 
   setRocketSpeed(speed: number) {
     return this.rocket.setSpeed(speed);
+  }
+
+  setRocketAngle(angle: number) {
+     this.rocket.setAngle(angle);
   }
 }
