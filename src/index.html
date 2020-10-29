@@ -10,10 +10,14 @@
   <title>Challenge</title>
 </head>
 <body>
-<div class="root js-root">
+<div class="root root--loading js-root">
   <nav class="nav">
     <button class="nav__action-button nav__start js-start" title="Start"><i class="las la-play"></i></button>
     <button class="nav__action-button nav__stop js-pause" title="Pause"><i class="las la-pause"></i></button>
+    <div class="nav__simulation-speed">
+      <span>Simulation speed: </span>
+      <input type="number" class="js-speed-input">
+    </div>
     <div class="nav__indicator nav__indicator--fixed" title="Speed">
       <i class="nav__indicator-icon las la-tachometer-alt"> </i>
       <span class="js-speed-indicator">0</span>

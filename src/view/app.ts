@@ -14,6 +14,7 @@ type State = {
   rocketInitialAngle: number;
   rocketSpeed: number;
   cameraXOffset: number;
+  simulationSpeed: number;
   rocketInOppositeDirection: boolean;
 };
 
@@ -27,6 +28,7 @@ const SELECTORS = {
   speedIndicator: '.js-speed-indicator',
   angleIndicator: '.js-angle-indicator',
   distanceIndicator: '.js-distance-indicator',
+  speedInput: '.js-speed-input',
 } as const;
 
 export class App extends Component<State> {
@@ -47,6 +49,7 @@ export class App extends Component<State> {
       rocketAngle: this.simulation.getRocketAngle(),
       rocketInitialAngle: this.simulation.getRocketInitialAngle(),
       rocketSpeed: this.simulation.getRocketSpeed(),
+      simulationSpeed: this.simulation.getSimulationSpeed(),
       cameraXOffset: this.simulation.getCameraXOffset(),
       running: false,
     };
@@ -59,6 +62,7 @@ export class App extends Component<State> {
       rocketInitialAngle: this.simulation.getRocketInitialAngle(),
       cameraXOffset: this.simulation.getCameraXOffset(),
       rocketSpeed: this.simulation.getRocketSpeed(),
+      simulationSpeed: this.simulation.getSimulationSpeed(),
     });
   }
 
@@ -80,8 +84,26 @@ export class App extends Component<State> {
     });
     this.elements.startButton.on('click', this.handleStart.bind(this));
     this.elements.pauseButton.on('click', this.handlePause.bind(this));
+    this.elements.speedInput.on(
+      'change',
+      this.handleSimulationSpeedChange.bind(this)
+    );
     this.elements.mover.onMove(this.handleRocketMove.bind(this));
     this.elements.arrowHead.onMove(this.handleSpeedChange.bind(this));
+  }
+
+  handleSimulationSpeedChange(event: Event) {
+    let newSpeed = Number((event.target as HTMLInputElement).value);
+    if (newSpeed > CONFIG.ROCKET.MAX_SIMULATION_SPEED) {
+      newSpeed = CONFIG.ROCKET.MAX_SIMULATION_SPEED;
+    }
+    if (newSpeed < CONFIG.ROCKET.MIN_SIMULATION_SPEED) {
+      newSpeed = CONFIG.ROCKET.MIN_SIMULATION_SPEED;
+    }
+    this.setState({
+      simulationSpeed: newSpeed,
+    });
+    this.simulation.setSimulationSpeed(newSpeed);
   }
 
   handleStart() {
@@ -179,6 +201,7 @@ export class App extends Component<State> {
     this.effect(() => {
       this.elements.container.classNames({
         running: this.state.running,
+        'root--loading': false,
       });
     }, ['running']);
 
@@ -225,5 +248,9 @@ export class App extends Component<State> {
         this.state.cameraXOffset
       ).toFixed(0);
     }, ['rocketPosition.x', 'cameraXOffset']);
+
+    (this.elements.speedInput.element as HTMLInputElement).value = String(
+      this.state.simulationSpeed
+    );
   }
 }

@@ -46,6 +46,8 @@ export class Rocket implements GameObject {
 
   private camera: Camera;
 
+  private simulationSpeed = CONFIG.ROCKET.SIMULATION_SPEED;
+
   constructor({
     assetsManager,
     renderContext,
@@ -111,7 +113,10 @@ export class Rocket implements GameObject {
     }
 
     // assume that we're at 60fps
-    this.timeSinceStart += (1 / 60) * CONFIG.ROCKET.SIMULATION_SPEED;
+    this.timeSinceStart +=
+      (1 / 60) *
+      this.simulationSpeed *
+      CONFIG.ROCKET.SIMULATION_SPEED_MULTIPLIER;
   }
 
   setPosition(position: { x: number; y: number }) {
@@ -151,10 +156,16 @@ export class Rocket implements GameObject {
     return this.initialAngle;
   }
 
-  isOppositeDirection() {}
-
   getSpeed() {
     return this.speed;
+  }
+
+  getSimulationSpeed() {
+    return this.simulationSpeed;
+  }
+
+  setSimulationSpeed(speed: number) {
+    this.simulationSpeed = speed;
   }
 
   setSpeed(speed: number) {

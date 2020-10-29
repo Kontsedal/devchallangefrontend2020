@@ -84,7 +84,7 @@ export interface EnhancedDomElement {
       }) => void
     >
   ) => void;
-  on: (eventName: string, handler: () => unknown) => () => void;
+  on: (eventName: string, handler: (...args: any[]) => unknown) => () => void;
 }
 
 export const enhanceDom = (selector: string): EnhancedDomElement => {

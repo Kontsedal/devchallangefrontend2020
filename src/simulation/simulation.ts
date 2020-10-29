@@ -132,4 +132,12 @@ export class Simulation {
   getCameraXOffset() {
     return this.camera.x;
   }
+
+  getSimulationSpeed() {
+    return this.rocket.getSimulationSpeed();
+  }
+
+  setSimulationSpeed(speed: number) {
+    this.rocket.setSimulationSpeed(speed);
+  }
 }
