@@ -13,6 +13,7 @@ type State = {
   rocketAngle: number;
   rocketInitialAngle: number;
   rocketSpeed: number;
+  cameraXOffset: number;
   rocketInOppositeDirection: boolean;
 };
 
@@ -23,6 +24,9 @@ const SELECTORS = {
   pauseButton: '.js-pause',
   container: '.js-root',
   arrowHead: '.js-arrow-head',
+  speedIndicator: '.js-speed-indicator',
+  angleIndicator: '.js-angle-indicator',
+  distanceIndicator: '.js-distance-indicator',
 } as const;
 
 export class App extends Component<State> {
@@ -33,6 +37,8 @@ export class App extends Component<State> {
 
   private simulation: Simulation;
 
+  private updateIntervalId: number | undefined;
+
   constructor() {
     super();
     this.simulation = new Simulation();
@@ -41,6 +47,7 @@ export class App extends Component<State> {
       rocketAngle: this.simulation.getRocketAngle(),
       rocketInitialAngle: this.simulation.getRocketInitialAngle(),
       rocketSpeed: this.simulation.getRocketSpeed(),
+      cameraXOffset: this.simulation.getCameraXOffset(),
       running: false,
     };
   }
@@ -50,6 +57,7 @@ export class App extends Component<State> {
       rocketPosition: this.simulation.getRocketPosition(),
       rocketAngle: this.simulation.getRocketAngle(),
       rocketInitialAngle: this.simulation.getRocketInitialAngle(),
+      cameraXOffset: this.simulation.getCameraXOffset(),
       rocketSpeed: this.simulation.getRocketSpeed(),
     });
   }
@@ -70,21 +78,30 @@ export class App extends Component<State> {
       this.simulation.render();
       this.refreshData();
     });
-    this.elements.startButton.on('click', () => {
-      this.simulation.start();
-      this.setState({
-        running: true,
-      });
-    });
-    this.elements.pauseButton.on('click', () => {
-      this.simulation.stop();
-      this.setState({
-        running: false,
-      });
-      this.refreshData();
-    });
+    this.elements.startButton.on('click', this.handleStart.bind(this));
+    this.elements.pauseButton.on('click', this.handlePause.bind(this));
     this.elements.mover.onMove(this.handleRocketMove.bind(this));
     this.elements.arrowHead.onMove(this.handleSpeedChange.bind(this));
+  }
+
+  handleStart() {
+    this.simulation.start();
+    this.setState({
+      running: true,
+    });
+    this.updateIntervalId = (setInterval(
+      this.refreshData.bind(this),
+      CONFIG.VIEW_REFRESH_SPEED_MS
+    ) as unknown) as number;
+  }
+
+  handlePause() {
+    this.simulation.stop();
+    this.setState({
+      running: false,
+    });
+    clearInterval(this.updateIntervalId);
+    this.refreshData();
   }
 
   handleRocketMove(newPosition: {
@@ -129,27 +146,35 @@ export class App extends Component<State> {
 
   normalizeMovePosition(position: { x: number; y: number }) {
     let newX = position.x;
-    const newY = position.y;
+    let newY = position.y;
     const minX = CONFIG.ROCKET.WIDTH / 2 + CONFIG.ROCKET.INITIAL_X;
+    const maxY = window.innerHeight + CONFIG.CAMERA.INITIAL_Y;
     if (position.x < minX) {
       newX = minX;
+    }
+    if (position.y > maxY) {
+      newY = maxY;
     }
     return { x: newX, y: newY };
   }
 
   render() {
-    this.effect(() => {
-      this.elements.arrow.css({
-        left: this.state.rocketPosition.x,
-        top: this.state.rocketPosition.y,
-      });
-      this.elements.mover.css({
-        left: this.state.rocketPosition.x,
-        top: this.state.rocketPosition.y,
-        width: CONFIG.ROCKET.WIDTH,
-        height: CONFIG.ROCKET.HEIGHT,
-      });
-    }, ['rocketPosition']);
+    this.effect(
+      () => {
+        this.elements.arrow.css({
+          left: this.state.rocketPosition.x,
+          top: this.state.rocketPosition.y,
+        });
+        this.elements.mover.css({
+          left: this.state.rocketPosition.x,
+          top: this.state.rocketPosition.y,
+          width: CONFIG.ROCKET.WIDTH,
+          height: CONFIG.ROCKET.HEIGHT,
+        });
+      },
+      ['rocketPosition'],
+      !this.state.running
+    );
 
     this.effect(() => {
       this.elements.container.classNames({
@@ -157,23 +182,48 @@ export class App extends Component<State> {
       });
     }, ['running']);
 
+    this.effect(
+      () => {
+        this.elements.arrow.css({
+          height:
+            CONFIG.MOVE_ARROW.MIN_HEIGHT +
+            ((CONFIG.MOVE_ARROW.MAX_HEIGHT - CONFIG.MOVE_ARROW.MIN_HEIGHT) /
+              CONFIG.MOVE_ARROW.MAX_SPEED) *
+              this.state.rocketSpeed,
+          transform: `translateY(-100%) rotate(${denormalizeAngle(
+            this.state.rocketAngle,
+            this.state.rocketInitialAngle
+          )}deg)`,
+        });
+      },
+      [
+        'rocketAngle',
+        'rocketInOppositeDirection',
+        'rocketSpeed',
+        'rocketInitialAngle',
+      ],
+      !this.state.running
+    );
+
     this.effect(() => {
-      this.elements.arrow.css({
-        height:
-          CONFIG.MOVE_ARROW.MIN_HEIGHT +
-          ((CONFIG.MOVE_ARROW.MAX_HEIGHT - CONFIG.MOVE_ARROW.MIN_HEIGHT) /
-            CONFIG.MOVE_ARROW.MAX_SPEED) *
-            this.state.rocketSpeed,
-        transform: `translateY(-100%) rotate(${denormalizeAngle(
-          this.state.rocketAngle,
-          this.state.rocketInitialAngle
-        )}deg)`,
-      });
-    }, [
-      'rocketAngle',
-      'rocketInOppositeDirection',
-      'rocketSpeed',
-      'rocketInitialAngle',
-    ]);
+      this.elements.speedIndicator.element.innerText = this.state.rocketSpeed.toFixed(
+        0
+      );
+    }, ['rocketSpeed']);
+
+    this.effect(() => {
+      const angle = denormalizeAngle(
+        denormalizeAngle(this.state.rocketAngle, this.state.rocketInitialAngle)
+      );
+      this.elements.angleIndicator.element.innerText = angle.toFixed(0);
+    }, ['rocketAngle']);
+
+    this.effect(() => {
+      this.elements.distanceIndicator.element.innerText = (
+        this.state.rocketPosition.x -
+        CONFIG.ROCKET.INITIAL_X -
+        this.state.cameraXOffset
+      ).toFixed(0);
+    }, ['rocketPosition.x', 'cameraXOffset']);
   }
 }

@@ -35,4 +35,5 @@ export const CONFIG = {
     MAX_SPEED: 300,
     MIN_SPEED: 0,
   },
+  VIEW_REFRESH_SPEED_MS: 200,
 };

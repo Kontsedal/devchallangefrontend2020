@@ -1,9 +1,13 @@
 html, body {
+  font-family: 'Ubuntu', sans-serif;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
   height: 100vh;
   overflow: hidden;
+
+  * {
+    box-sizing: border-box;
+  }
 }
 
 .root {
@@ -15,24 +19,22 @@ html, body {
     .arrow, .mover, .startBtn {
       display: none;
     }
-    .pauseBtn {
+    .nav__start {
+      display: none;
+    }
+    .nav__stop {
       display: block;
     }
-  }
-
-  .pauseBtn {
-    display: none;
   }
 }
 
 .canvas {
-  //border: 3px solid #ddd
 }
 
 .arrow {
   width: 5px;
   height: 150px;
-  background-color: tomato;
+  background-color: #2E97FC;
   position: absolute;
   transform-origin: 50% 100% 0;
   opacity: 0.7;
@@ -45,7 +47,7 @@ html, body {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    background-color: tomato;
+    background-color: #2E97FC;
     cursor: move;
     z-index: 2;
   }
@@ -53,7 +55,7 @@ html, body {
 
 .mover {
   border-radius: 50%;
-  background-color: tomato;
+  background-color: #2E97FC;
   position: absolute;
   transform: translate3d(-50%, -50%, 0);
   cursor: move;
@@ -61,13 +63,46 @@ html, body {
   z-index: 2;
 }
 
-.startBtn {
+
+.nav {
   position: absolute;
+  top:0;
   left: 0;
-  top: 0;
-}
-.pauseBtn {
-  position: absolute;
-  left: 0;
-  top: 0;
+  padding: 10px;
+  height: 30px;
+  background-color: #424242;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  &__indicator {
+    color: #fff;
+    display: flex;
+    font-weight: 700;
+    font-size: 15px;
+    margin-right: 10px;
+    &--fixed {
+      width: 60px;
+    }
+  }
+  &__indicator-icon {
+    margin-right: 7px;
+    display: flex;
+    font-size: 20px;
+  }
+
+  &__action-button {
+    margin-right: 15px;
+    color: black;
+    border: none;
+    padding: 8px 10px;
+    background-color: #FDEF17;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  &__stop {
+    display: none;
+  }
 }

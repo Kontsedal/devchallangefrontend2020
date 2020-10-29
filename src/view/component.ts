@@ -32,7 +32,10 @@ export class Component<S extends Record<string, any>> {
     );
   }
 
-  effect(callback: () => void, statePaths: string[]) {
+  effect(callback: () => void, statePaths: string[], enabled = true) {
+    if (!enabled) {
+      return;
+    }
     if (this.isStateEntriesChanged(statePaths)) {
       callback();
     }

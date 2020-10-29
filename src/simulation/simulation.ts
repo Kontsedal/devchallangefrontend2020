@@ -48,6 +48,7 @@ export class Simulation {
         height: 5000,
         width: 100,
         camera: this.camera,
+        assetsManager: this.assetsManager,
       })
     );
     repeat(CONFIG.WALLS.REPEAT_TIMES, (index) => {
@@ -58,6 +59,7 @@ export class Simulation {
           height: CONFIG.WALLS.HEIGHT,
           width: CONFIG.WALLS.WIDTH,
           camera: this.camera,
+          assetsManager: this.assetsManager,
         })
       );
     });
@@ -125,5 +127,9 @@ export class Simulation {
 
   setRocketAngle(angle: number) {
     this.rocket.setAngle(angle);
+  }
+
+  getCameraXOffset() {
+    return this.camera.x;
   }
 }
