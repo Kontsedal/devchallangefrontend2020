@@ -35,13 +35,15 @@ export class Camera implements GameObject {
     if (!this.target) {
       return;
     }
+    let newX = 0;
+    let newY = 0;
     if (
       this.target.x >=
       this.renderContext.getWidth() -
         this.renderContext.getWidth() *
           CONFIG.CAMERA.MAX_TARGET_OFFSET_X_PERCENT
     ) {
-      this.x = -(
+      newX = -(
         this.initialX +
         this.target.x -
         this.renderContext.getWidth() +
@@ -49,7 +51,7 @@ export class Camera implements GameObject {
           CONFIG.CAMERA.MAX_TARGET_OFFSET_X_PERCENT
       );
     } else if (this.target.x <= CONFIG.CAMERA.MIN_TARGET_OFFSET_X) {
-      this.x = -(
+      newX = -(
         this.initialX +
         this.target.x -
         CONFIG.CAMERA.MIN_TARGET_OFFSET_X
@@ -61,7 +63,7 @@ export class Camera implements GameObject {
         this.renderContext.getWidth() *
           CONFIG.CAMERA.MAX_TARGET_OFFSET_X_PERCENT
     ) {
-      this.x = -(
+      newX = -(
         this.initialX +
         this.target.x -
         this.renderContext.getWidth() +
@@ -73,10 +75,16 @@ export class Camera implements GameObject {
     const maxY =
       this.renderContext.getHeight() - CONFIG.CAMERA.MAX_TARGET_OFFSET_Y;
     if (this.target.y >= maxY) {
-      this.y = this.initialY + this.target.y - maxY;
+      newY = this.initialY + this.target.y - maxY;
     } else {
-      this.y = this.initialY;
+      newY = this.initialY;
     }
+    this.x =
+      (this.x * CONFIG.CAMERA.TRANSITION_COEF + newX) /
+      (CONFIG.CAMERA.TRANSITION_COEF + 1);
+    this.y =
+      (this.y * CONFIG.CAMERA.TRANSITION_COEF + newY) /
+      (CONFIG.CAMERA.TRANSITION_COEF + 1);
   }
 
   getCurrentY(originalY: number): number {
