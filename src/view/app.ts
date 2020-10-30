@@ -15,7 +15,6 @@ type State = {
   rocketSpeed: number;
   cameraXOffset: number;
   simulationSpeed: number;
-  rocketInOppositeDirection: boolean;
 };
 
 const SELECTORS = {

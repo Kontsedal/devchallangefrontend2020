@@ -1,6 +1,11 @@
 import { Position } from '../simulation/interfaces/position';
 import { pipe } from './function';
 
+/**
+ * Memoize function calls with defined precision level(amount of numbers after dot)
+ * Works only for functions with one argument which is number
+ * Created for pre caching Math methods
+ */
 function memo(
   cb: (num: number) => number,
   precision: number
@@ -29,6 +34,11 @@ export const cos = memo(pipe(degreesToRadians, Math.cos), 0);
 export const sin = memo(pipe(degreesToRadians, Math.sin), 0);
 export const atan = memo(Math.atan, 2);
 
+/**
+ * ACHTUNG! K O S T Y L
+ * Transforms classic angle (to x axis) to browser friendly angle (to y axis)
+ * By providing second argument we can decide whether it is opposite direction angle or not
+ */
 export function denormalizeAngle(angle: number, initialAngle?: number): number {
   let result = 90 - angle;
   if (
