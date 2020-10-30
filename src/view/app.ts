@@ -1,5 +1,5 @@
 import { Component } from './component';
-import { Simulation } from '../simulation/simulation';
+import { Simulation } from '../simulation';
 import { CONFIG } from '../config';
 import { EnhancedDomElement, enhanceDom } from '../utils/dom';
 import { denormalizeAngle, getOnePointAngle } from '../utils/math';

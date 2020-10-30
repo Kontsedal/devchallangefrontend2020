@@ -18,6 +18,7 @@ module.exports = {
     'no-unused-vars': 0,
     '@typescript-eslint/no-unused-vars': 'error',
     'no-shadow': 0,
+    'consistent-return': 0,
     '@typescript-eslint/no-shadow': ['error'],
   },
   settings: {
