@@ -1,3 +1,9 @@
+/**
+ * Holds canvas element its actual size(reacts on window resize)
+ * Used for drawing objects and calculation of their position
+ * Used by Camera for correct offsets calculation and normalization of
+ * coordinates
+ */
 export class RenderContext {
   private readonly element: HTMLCanvasElement;
 

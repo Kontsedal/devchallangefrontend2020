@@ -2,11 +2,11 @@ import { GameObject } from '../interfaces/gameObject';
 import { getCollisions } from './collision';
 import { RenderContext } from './renderContext';
 
-type Options = {
-  fps?: number;
-  renderContext: RenderContext;
-};
-
+/**
+ * Responsible for rendering and updating game objects with provided FPS
+ * During updating also provides info about element's collisions
+ * Could be stopped and resumed
+ */
 export class RenderLoop {
   private readonly frameLengthSeconds: number;
 
@@ -16,7 +16,13 @@ export class RenderLoop {
 
   private renderContext: RenderContext;
 
-  constructor({ fps = 60, renderContext }: Options) {
+  constructor({
+    fps = 60,
+    renderContext,
+  }: {
+    fps?: number;
+    renderContext: RenderContext;
+  }) {
     this.frameLengthSeconds = 1 / fps;
     this.renderContext = renderContext;
   }

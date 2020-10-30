@@ -1,3 +1,10 @@
+/**
+ * Responsible for loading assets(images)
+ * During simulation initialization, all game objects register their assets in
+ * the single instance of this class.
+ * After success of .waitUntilLoaded() call, all simulation assets can be used
+ * safely
+ */
 export class AssetsManager {
   private assetsQueue: Promise<any>[] = [];
 
