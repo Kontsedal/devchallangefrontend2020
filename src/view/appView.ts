@@ -217,12 +217,7 @@ export class AppView extends Component<State> {
           )}deg)`,
         });
       },
-      [
-        'rocketAngle',
-        'rocketInOppositeDirection',
-        'rocketSpeed',
-        'rocketInitialAngle',
-      ],
+      ['rocketAngle', 'rocketSpeed', 'rocketInitialAngle'],
       !this.state.running
     );
 
