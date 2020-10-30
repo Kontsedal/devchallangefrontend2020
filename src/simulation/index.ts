@@ -97,15 +97,15 @@ export class Simulation {
 
   getRocketPosition(): { x: number; y: number } {
     return {
-      x: this.camera.getCurrentX(this.rocket.x),
-      y: this.camera.getCurrentY(this.rocket.y),
+      x: this.camera.simulationXToViewportX(this.rocket.x),
+      y: this.camera.simulationYToViewportY(this.rocket.y),
     };
   }
 
   setRocketPosition(position: { x: number; y: number }) {
     this.rocket.setPosition({
-      x: this.camera.normalizeX(position.x),
-      y: this.camera.normalizeY(position.y),
+      x: this.camera.viewportXToSimulationX(position.x),
+      y: this.camera.viewportYToSimulationY(position.y),
     });
   }
 

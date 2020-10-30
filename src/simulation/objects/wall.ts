@@ -56,8 +56,8 @@ export class Wall implements GameObject {
       'repeat'
     ) as CanvasPattern;
     context.fillRect(
-      this.camera.getCurrentX(this.x),
-      this.camera.getCurrentY(this.y),
+      this.camera.simulationXToViewportX(this.x),
+      this.camera.simulationYToViewportY(this.y),
       this.width,
       this.height
     );

@@ -44,7 +44,7 @@ export class Sky implements GameObject {
     const context = this.renderContext.getContext();
     context.save();
     context.translate(
-      this.camera.getCurrentX(0),
+      this.camera.simulationXToViewportX(0),
       -this.height / 2 + this.camera.y
     );
     context.fillStyle = context.createPattern(

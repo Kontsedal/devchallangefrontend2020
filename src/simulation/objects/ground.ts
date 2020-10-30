@@ -42,7 +42,10 @@ export class Ground implements GameObject {
     this.calculateSize();
     const context = this.renderContext.getContext();
     context.save();
-    context.translate(this.camera.getCurrentX(0), this.camera.getCurrentY(0));
+    context.translate(
+      this.camera.simulationXToViewportX(0),
+      this.camera.simulationYToViewportY(0)
+    );
     context.fillStyle = context.createPattern(
       this.img,
       'repeat'

@@ -119,21 +119,12 @@ export class Rocket implements GameObject {
       CONFIG.ROCKET.SIMULATION_SPEED_MULTIPLIER;
   }
 
-  setPosition(position: { x: number; y: number }) {
-    this.initialX = position.x;
-    this.initialY = position.y;
-    this.x = position.x;
-    this.y = position.y;
-    this.timeSinceStart = 0;
-    this.initialAngle = this.currentAngle;
-  }
-
   render() {
     const canvasContext = this.renderContext.getContext();
     canvasContext.save();
     canvasContext.translate(
-      this.camera.getCurrentX(this.x),
-      this.camera.getCurrentY(this.y)
+      this.camera.simulationXToViewportX(this.x),
+      this.camera.simulationYToViewportY(this.y)
     );
     canvasContext.rotate(
       degreesToRadians(denormalizeAngle(this.currentAngle, this.initialAngle))
@@ -146,6 +137,15 @@ export class Rocket implements GameObject {
       this.height
     );
     canvasContext.restore();
+  }
+
+  setPosition(position: { x: number; y: number }) {
+    this.initialX = position.x;
+    this.initialY = position.y;
+    this.x = position.x;
+    this.y = position.y;
+    this.timeSinceStart = 0;
+    this.initialAngle = this.currentAngle;
   }
 
   getCurrentAngle() {
