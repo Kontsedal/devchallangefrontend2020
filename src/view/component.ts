@@ -1,13 +1,16 @@
 export class Component<S extends Record<string, any>> {
   private prevState: S | undefined;
 
-  // @ts-ignore
   public state: S;
 
   setState(newState: Partial<S>) {
     this.prevState = this.state;
     this.state = { ...this.state, ...newState };
     this.render();
+  }
+
+  constructor(state: S) {
+    this.state = state;
   }
 
   isStateEntryChanged(path: string): boolean {

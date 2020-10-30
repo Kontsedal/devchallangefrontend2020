@@ -1,10 +1,12 @@
-import { App } from './view/app';
+import { AppView } from './view/appView';
+import { Simulation } from './simulation';
 
 async function main() {
-  const app = new App();
-  await app.init();
+  const simulation = new Simulation();
+  const view = new AppView(simulation);
+  await view.init();
 }
 
-main().catch(() => {
-  console.error('Failed to bootstrap');
+main().catch((error) => {
+  console.error('Failed to bootstrap', error);
 });

@@ -30,7 +30,7 @@ const SELECTORS = {
   speedInput: '.js-speed-input',
 } as const;
 
-export class App extends Component<State> {
+export class AppView extends Component<State> {
   private elements: Record<
     keyof typeof SELECTORS | string,
     EnhancedDomElement
@@ -40,18 +40,17 @@ export class App extends Component<State> {
 
   private updateIntervalId: number | undefined;
 
-  constructor() {
-    super();
-    this.simulation = new Simulation();
-    this.state = {
-      rocketPosition: this.simulation.getRocketPosition(),
-      rocketAngle: this.simulation.getRocketAngle(),
-      rocketInitialAngle: this.simulation.getRocketInitialAngle(),
-      rocketSpeed: this.simulation.getRocketSpeed(),
-      simulationSpeed: this.simulation.getSimulationSpeed(),
-      cameraXOffset: this.simulation.getCameraXOffset(),
+  constructor(simulation: Simulation) {
+    super({
+      rocketPosition: simulation.getRocketPosition(),
+      rocketAngle: simulation.getRocketAngle(),
+      rocketInitialAngle: simulation.getRocketInitialAngle(),
+      rocketSpeed: simulation.getRocketSpeed(),
+      simulationSpeed: simulation.getSimulationSpeed(),
+      cameraXOffset: simulation.getCameraXOffset(),
       running: false,
-    };
+    });
+    this.simulation = simulation;
   }
 
   refreshData() {
